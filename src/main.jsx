@@ -1,9 +1,10 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import '../src/styles/global.css'
-import Meses from './pages/meses'
+// import '../src/styles/global.css'
+import App from '../src/pages/app.jsx'
+ 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <Meses></Meses>
+    <App></App>
   </StrictMode>,
 )

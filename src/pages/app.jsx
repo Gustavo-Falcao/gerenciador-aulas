@@ -10,7 +10,7 @@ function App() {
         <>
             {isAtual ? <MesAtual /> : <Meses />}
             <nav>
-                <button className="meses" onClick={() => setBotaoNavegacao(prev => (prev === 'atual' ? 'meses' : 'atual'))}>{isAtual ? "Meses" : "Atual"} ⇆</button> 
+                <button className="meses" onClick={() => setBotaoNavegacao(prev => (prev === 'atual' ? 'meses' : 'atual'))}>{isAtual ? "Meses" : "Mes atual"} ⇆</button> 
             </nav>
         </>
     )

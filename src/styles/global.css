@@ -13,7 +13,6 @@ html,body {
 body {
     background-color: var(--bg);
     font-family: system-ui, -apple-system;
-    font-size: 17px;
     color: var(--color);
 }
 

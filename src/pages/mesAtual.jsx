@@ -1,18 +1,27 @@
 import '../styles/mesAtual.css';
 import { gerarListaMes , gerarTitulo} from '../helpers/handlerDias';
+import { useRef, useState } from 'react';
 
 function MesAtual() {
-    const dias = gerarListaMes();
+    const [dias, setDias] = useState(gerarListaMes() || []) 
+    const total = useRef(0)
+    function toggle(id) {
+        setDias(prev => prev.map((item) => item.id === id ? {... item, marcado: !item.marcado} : item))
+    }
     const listaUl = <ul className='checklist clean'>
         {dias.map((dia) => 
-        <li key={dia.id} className={dias.length === (dias.indexOf(dia))+1 ? "check" : "check border-bottom" } >
-        <input type="checkbox" id={dia.id}/>
+        <li key={dia.id} className={dias.length === (dias.indexOf(dia))+1 ? "check" : "check border-bottom"} >
+        <input 
+            type="checkbox" 
+            id={dia.id}
+            checked={dia.marcado}
+            onChange={() => toggle(dia.id)}
+            />
         <label htmlFor={dia.id}>{dia.dataFormatada}</label>
-        <small className='badge'>Pendente</small>
+        <small className='badge'>{dia.marcado ? "Ok" : "Pendendte"}</small>
     </li>)}
     </ul> 
-    const data = dias[0];
-    const titulo = gerarTitulo(data.infoData);
+    const titulo = gerarTitulo();
 
     return(
         <>

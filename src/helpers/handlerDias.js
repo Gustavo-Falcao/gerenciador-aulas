@@ -1,7 +1,11 @@
 import { gerarIdKey } from "./handlerId";
 
+function gerarDiaAtual() {
+    return new Date()
+}
+
 export function gerarListaMes() {
-    const dataAtual = new Date();
+    const dataAtual = gerarDiaAtual()
     const mes = dataAtual.getMonth();
     const ano = dataAtual.getFullYear();
     const ultimaData = new Date(ano, mes, 0);
@@ -12,7 +16,7 @@ export function gerarListaMes() {
     for(let dia = 1; dia <= ultimoDia; dia++) {
         const data = new Date(ano, mes, dia);
         if(data.getDay() === 1 || data.getDay() === 3) {
-            dias.push({id: gerarIdKey(), infoData: data, dataFormatada: formatarData(data), isPago: false});
+            dias.push({id: gerarIdKey(), dataFormatada: formatarData(data), valor: 30, marcado: false});
         }
     }
     return dias;
@@ -26,9 +30,10 @@ function formatarData(data) {
     return `${dia}/${mes} - ${diaSemana}`;
 }
 
-export function gerarTitulo(data) {
-    const mes = data.getMonth();
+export function gerarTitulo() {
+    const dia = gerarDiaAtual();
+    const mes = dia.getMonth();
     const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
 
-    return `${meses[mes]} ${data.getFullYear()}`;
+    return `${meses[mes]} ${dia.getFullYear()}`;
 }

@@ -74,11 +74,22 @@ ul.checklist {
     opacity: .30; 
     text-decoration: line-through;
 }
-.clean input:checked ~ .badge {
+/* .clean input:checked ~ .badge {
     background: rgba(25, 195, 125, .12);
     color: #19c37d;
     border-color: transparent;
+} */
+
+.ok {
+    background: rgba(25, 195, 125, .12);
+    color: #19c37d;
+    border-color: transparent;
+    font: 500 12px/1 system-ui;
+    padding: 5px 10px;
+    border-radius: 999px;
+    letter-spacing: .2px;
 }
+
 .badge {
     font: 500 12px/1 system-ui;
     padding: 5px 10px;

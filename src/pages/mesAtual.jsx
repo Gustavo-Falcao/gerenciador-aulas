@@ -1,6 +1,7 @@
 import '../styles/mesAtual.css';
 import { gerarListaMes , gerarTitulo} from '../helpers/handlerDias';
 import { useRef, useState } from 'react';
+import { formatarDinheiro } from '../helpers/handlerCurrency';
 
 function MesAtual() {
     const [dias, setDias] = useState(gerarListaMes() || []) 
@@ -9,20 +10,31 @@ function MesAtual() {
     
     function toggle(id, isMarcado) {
         setDias(prev => prev.map((item) => item.id === id ? {... item, marcado: !item.marcado} : item))
-        setTotal(prev => isMarcado ? prev - 30 : prev + 30);
+        const valorAtual = dias.find((dia) => dia.id === id);
+        setTotal(prev => isMarcado ? prev - valorAtual.valor : prev + valorAtual.valor);
     }
 
     const listaUl = <ul className='checklist clean'>
         {dias.map((dia) => 
-        <li key={dia.id} className={dias.length === (dias.indexOf(dia))+1 ? "check" : "check border-bottom"} >
+        <li 
+            key={dia.id} 
+            className={dias.length === (dias.indexOf(dia))+1 ? "check" : "check border-bottom"} 
+        >
         <input 
             type="checkbox" 
             id={dia.id}
             checked={dia.marcado}
             onChange={() => toggle(dia.id, dia.marcado)}
             />
-        <label htmlFor={dia.id}>{dia.dataFormatada}</label>
-        <small className={dia.marcado ? "ok" : "badge"}>{dia.marcado ? "Ok" : "Pendendte"}</small>
+        <label 
+            className={dia.marcado && 'marcado'}
+            htmlFor={dia.id}>
+            {dia.dataFormatada}
+        </label>
+        <small 
+            className={dia.marcado ? "ok" : "badge"}>
+                {dia.marcado ? "Ok" : "Pendendte"}
+        </small>
     </li>)}
     </ul> 
 
@@ -35,7 +47,7 @@ function MesAtual() {
                 </div>
                 <div className='total'>
                     <span>Total:</span>
-                    <span>R$ {total}</span>
+                    <span>{formatarDinheiro(total)}</span>
                 </div>
             </div>
         </>

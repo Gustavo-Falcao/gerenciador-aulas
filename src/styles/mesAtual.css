@@ -70,15 +70,11 @@ ul.checklist {
 .check label {
     cursor: pointer;
 }
-.clean input:checked ~ label {
-    opacity: .30; 
+
+.marcado {
+    opacity: .30;
     text-decoration: line-through;
 }
-/* .clean input:checked ~ .badge {
-    background: rgba(25, 195, 125, .12);
-    color: #19c37d;
-    border-color: transparent;
-} */
 
 .ok {
     background: rgba(25, 195, 125, .12);

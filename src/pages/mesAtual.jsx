@@ -1,24 +1,40 @@
 import '../styles/mesAtual.css';
-import { gerarListaMes , gerarTitulo} from '../helpers/handlerDias';
-import { useRef, useState } from 'react';
+import { gerarObjetoMesAtual, gerarTitulo, isObjetoAtual} from '../helpers/handlerDias';
+import { useEffect, useRef, useState } from 'react';
 import { formatarDinheiro } from '../helpers/handlerCurrency';
 
 function MesAtual() {
-    const [dias, setDias] = useState(gerarListaMes() || []) 
-    const [total, setTotal] = useState(0)
-    const titulo = useRef(gerarTitulo())
+    const [objetoMesAtual, setObjetoMesAtual] = useState(() => {
+        const objeto = localStorage.getItem('objMesAtual');
+        if(objeto) {
+            const objFormat = JSON.parse(objeto);
+            return isObjetoAtual(objFormat) ? objFormat : gerarObjetoMesAtual();
+        }
+        return gerarObjetoMesAtual();
+    }) 
+    const [total, setTotal] = useState(objetoMesAtual.valorTotal)
+    const titulo = useRef(gerarTitulo(objetoMesAtual.mes, objetoMesAtual.ano));
+
+    useEffect(() => {
+        try {
+            localStorage.setItem('objMesAtual', JSON.stringify(objetoMesAtual));
+        } catch (e) {
+            console.log(`Erro ao salvar no localStorage => ${e}`)
+        }
+    },[objetoMesAtual])
     
     function toggle(id, isMarcado) {
-        setDias(prev => prev.map((item) => item.id === id ? {... item, marcado: !item.marcado} : item))
-        const valorAtual = dias.find((dia) => dia.id === id);
+        setObjetoMesAtual(prev => ({...prev, 
+            arrayDias: prev.arrayDias.map((item) => item.id === id ? {...item, marcado: !item.marcado} : item)}));
+        const valorAtual = objetoMesAtual.arrayDias.find((dia) => dia.id === id);
         setTotal(prev => isMarcado ? prev - valorAtual.valor : prev + valorAtual.valor);
     }
 
     const listaUl = <ul className='checklist clean'>
-        {dias.map((dia) => 
+        {objetoMesAtual.arrayDias.map((dia) => 
         <li 
             key={dia.id} 
-            className={dias.length === (dias.indexOf(dia))+1 ? "check" : "check border-bottom"} 
+            className={objetoMesAtual.arrayDias.length === (objetoMesAtual.arrayDias.indexOf(dia))+1 ? "check" : "check border-bottom"} 
         >
         <input 
             type="checkbox" 
@@ -27,8 +43,9 @@ function MesAtual() {
             onChange={() => toggle(dia.id, dia.marcado)}
             />
         <label 
-            className={dia.marcado && 'marcado'}
-            htmlFor={dia.id}>
+            className={dia.marcado ? 'marcado' : undefined}
+            htmlFor={dia.id}
+            >
             {dia.dataFormatada}
         </label>
         <small 

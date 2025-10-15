@@ -1,11 +1,11 @@
 import { gerarIdKey } from "./handlerId";
 
-function gerarDiaAtual() {
-    return new Date()
+function gerarDataAtual() {
+    return new Date();
 }
 
-export function gerarListaMes() {
-    const dataAtual = gerarDiaAtual()
+export function gerarObjetoMesAtual() {
+    const dataAtual = gerarDataAtual();
     const mes = dataAtual.getMonth();
     const ano = dataAtual.getFullYear();
     const ultimaData = new Date(ano, mes, 0);
@@ -19,7 +19,7 @@ export function gerarListaMes() {
             dias.push({id: gerarIdKey(), dataFormatada: formatarData(data), valor: 30, marcado: false});
         }
     }
-    return dias;
+    return {arrayDias: dias, mes: mes, ano: ano, valorTotal: 0};
 }
 
 
@@ -30,10 +30,13 @@ function formatarData(data) {
     return `${dia}/${mes} - ${diaSemana}`;
 }
 
-export function gerarTitulo() {
-    const dia = gerarDiaAtual();
-    const mes = dia.getMonth();
+export function gerarTitulo(mes, ano) {
     const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
 
-    return `${meses[mes]} ${dia.getFullYear()}`;
+    return `${meses[mes]} ${ano}`;
+}
+
+export function isObjetoAtual(objMesAtual) {
+    const dataAtual = gerarDataAtual();
+    return dataAtual.getMonth() === objMesAtual.mes
 }

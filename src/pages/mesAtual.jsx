@@ -12,8 +12,11 @@ function MesAtual() {
         }
         return gerarObjetoMesAtual();
     }) 
-    const [total, setTotal] = useState(objetoMesAtual.valorTotal)
-    const titulo = useRef(gerarTitulo(objetoMesAtual.mes, objetoMesAtual.ano));
+    const titulo = gerarTitulo(objetoMesAtual.mes, objetoMesAtual.ano);
+
+    const valorTotal = objetoMesAtual.arrayDias.reduce((acc, dia) => {
+        return acc + (dia.marcado ? 30 : 0);
+    }, 0)
 
     useEffect(() => {
         try {
@@ -23,11 +26,8 @@ function MesAtual() {
         }
     },[objetoMesAtual])
     
-    function toggle(id, isMarcado) {
-        setObjetoMesAtual(prev => ({...prev, 
-            arrayDias: prev.arrayDias.map((item) => item.id === id ? {...item, marcado: !item.marcado} : item)}));
-        const valorAtual = objetoMesAtual.arrayDias.find((dia) => dia.id === id);
-        setTotal(prev => isMarcado ? prev - valorAtual.valor : prev + valorAtual.valor);
+    function toggle(id) {
+        setObjetoMesAtual(prev => ({...prev, arrayDias: prev.arrayDias.map((item) => item.id === id ? {...item, marcado: !item.marcado} : item)}));
     }
 
     const listaUl = <ul className='checklist clean'>
@@ -40,7 +40,7 @@ function MesAtual() {
             type="checkbox" 
             id={dia.id}
             checked={dia.marcado}
-            onChange={() => toggle(dia.id, dia.marcado)}
+            onChange={() => toggle(dia.id)}
             />
         <label 
             className={dia.marcado ? 'marcado' : undefined}
@@ -59,12 +59,12 @@ function MesAtual() {
         <>
             <div className='conteudo'>
                 <div className='box-dias'>
-                    <h1>{titulo.current}</h1>
+                    <h1>{titulo}</h1>
                     {listaUl}
                 </div>
                 <div className='total'>
                     <span>Total:</span>
-                    <span>{formatarDinheiro(total)}</span>
+                    <span>{formatarDinheiro(valorTotal)}</span>
                 </div>
             </div>
         </>

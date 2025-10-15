@@ -19,7 +19,7 @@ export function gerarObjetoMesAtual() {
             dias.push({id: gerarIdKey(), dataFormatada: formatarData(data), valor: 30, marcado: false});
         }
     }
-    return {arrayDias: dias, mes: mes, ano: ano, valorTotal: 0};
+    return {arrayDias: dias, mes: mes, ano: ano};
 }
 
 

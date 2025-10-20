@@ -140,3 +140,78 @@ button.meses {
 .border-bottom {
     border-bottom: 1px solid #70707036;
 }
+
+.background-modal {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background-color: rgba(107, 107, 107, 0.568);
+    backdrop-filter: blur(2px);
+}
+
+.janela-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 255, 255, 0.61);
+    text-align: center;
+    min-width: 250px;
+    border-radius: 30px;
+    padding: 20px;
+}
+
+.text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.text > h2{
+    font-size: 16px;
+    margin: 0px;
+    font-weight: 500;
+}
+
+.text > p {
+    font-size: 13px;
+    color: #00000080;
+    text-align: left;
+    margin-top: 7px;
+    margin-bottom: 20px;
+}
+
+.info-icon {
+    position: fixed;
+    z-index: 100;
+    top: 31px;
+    left: 82%;
+    color: #19c37d;
+    box-shadow: 0px 0px 2px 0px #22c55e;
+    border-radius: 100%;
+    padding: 5px;
+    background-color: rgba(25, 195, 125, .12);
+    border: 1px solid;
+}
+
+.bot-modal {
+    width: fit-content;
+    font-size: 16px;
+    font-weight: 500;
+    background-color: rgba(107, 107, 107, 0.178);
+    padding: 12px 37px;
+    border-radius: 50px;
+}
+
+.fechar {
+    color: rgba(255, 0, 0, 0.849);
+}
+
+.options {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}

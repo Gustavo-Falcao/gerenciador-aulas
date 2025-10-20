@@ -2,6 +2,7 @@ import '../styles/mesAtual.css';
 import { gerarObjetoMesAtual, gerarTitulo, isObjetoAtual} from '../helpers/handlerDias';
 import { useEffect, useRef, useState } from 'react';
 import { formatarDinheiro } from '../helpers/handlerCurrency';
+import Modal from '../components/modal';
 
 function MesAtual() {
     const [objetoMesAtual, setObjetoMesAtual] = useState(() => {
@@ -12,11 +13,16 @@ function MesAtual() {
         }
         return gerarObjetoMesAtual();
     }) 
+    const [botOpenModal, setBotOpenModal] = useState(false)
     const titulo = gerarTitulo(objetoMesAtual.mes, objetoMesAtual.ano);
 
-    const valorTotal = objetoMesAtual.arrayDias.reduce((acc, dia) => {
-        return acc + (dia.marcado ? 30 : 0);
+    const totalMarcado = objetoMesAtual.arrayDias.reduce((acc, dia) => {
+        return acc + (dia.marcado ? 1 : 0);
     }, 0)
+
+    const valorTotal = totalMarcado * 30
+
+    const isAllMarked = totalMarcado === objetoMesAtual.arrayDias.length;
 
     useEffect(() => {
         try {
@@ -58,6 +64,10 @@ function MesAtual() {
     return(
         <>
             <div className='conteudo'>
+                {isAllMarked ? <span onClick={() => {setBotOpenModal(true)}} className="material-symbols-outlined info-icon">
+                    check
+                </span> : null}
+                
                 <div className='box-dias'>
                     <h1>{titulo}</h1>
                     {listaUl}
@@ -67,6 +77,7 @@ function MesAtual() {
                     <span>{formatarDinheiro(valorTotal)}</span>
                 </div>
             </div>
+            <Modal isOpen={botOpenModal} onFecharModal={() => {setBotOpenModal(!botOpenModal)}} />
         </>
     )
 }

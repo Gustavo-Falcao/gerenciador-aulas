@@ -8,8 +8,8 @@ function Modal({isOpen, onFecharModal}) {
                             <p>Ao fechar o mês, será gerado uma nova lista com as aulas do mês seguinte.</p>
                         </div>
                         <div className="options">
-                            <button className="bot-modal fechar">Fechar</button>
                             <button onClick={onFecharModal} className="bot-modal">Cancel</button>
+                            <button className="bot-modal fechar">Fechar</button>
                         </div>
                     </div>
                 </div> 

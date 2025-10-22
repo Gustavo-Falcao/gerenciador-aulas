@@ -8,10 +8,30 @@ h1 {
     margin-top: 5px;
     font-size: 24px;
     font-weight: 600;
+    width: fit-content;
+}
+
+.titulo {
     background-color: #D6D9D7;
     padding: 10px 0px 10px 20px;
     border-radius: 32px 32px 0px 0px;
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
 }
+
+.data-titulo {
+    margin: 0px;
+    text-align: center;
+    padding: 5px 10px;
+    margin-top: 7px;
+    background-color: #b9b9b9;
+    color: black;
+    border-radius: 20px;
+    font: 500 16px/1 system-ui;
+    letter-spacing: .2px; 
+}
+
 ul.checklist {
     display: grid;
     margin: 0px 0 0px;
@@ -21,6 +41,11 @@ ul.checklist {
     display: grid;
     border: 1px solid #D6D9D7;
 }
+
+.set-borda > ul{
+    border-radius: 0px 0px 32px 0px;
+}
+
 .check {
     display: grid;
     grid-template-columns: auto 1fr auto;
@@ -122,13 +147,29 @@ button.meses {
     border: 1px solid #86EFAC;
     border-top: none;
     width: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 20px;
+    font-weight: 500;
     margin: auto;
+}
+
+.total-no-margin {
+    background-color: #DCFCE7;
+    padding: 16px;
+    color: #0B7F36;
+    border-radius: 0px 0px 32px 32px;
+    border: 1px solid #86EFAC;
+    border-top: none;
+    width: 180px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     font-size: 20px;
     font-weight: 500;
 }
+
 .total h2 {
     margin: 0px;
 }
@@ -185,16 +226,25 @@ button.meses {
 }
 
 .info-icon {
-    position: fixed;
-    z-index: 100;
-    top: 27px;
-    left: 82%;
     color: #19c37d;
     box-shadow: 0px 0px 2px 0px #22c55e;
     border-radius: 100%;
     padding: 5px;
     background-color: rgba(25, 195, 125, .12);
     border: 1px solid;
+}
+
+.pai-total {
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+}
+
+.caixa-check {
+    padding: 13px;
+    background-color: white;
+    border-radius: 0px 0px 25px 25px;
+    box-shadow: 0px 3px 10px 0px #00000063;
 }
 
 .bot-modal {

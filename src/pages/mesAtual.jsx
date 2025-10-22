@@ -1,5 +1,5 @@
 import '../styles/mesAtual.css';
-import { gerarObjetoMesAtual, gerarTitulo, isObjetoAtual} from '../helpers/handlerDias';
+import { gerarObjetoMesAtual, gerarTitulo, isObjetoAtual, gerarDataAtualTitulo} from '../helpers/handlerDias';
 import { useEffect, useRef, useState } from 'react';
 import { formatarDinheiro } from '../helpers/handlerCurrency';
 import Modal from '../components/modal';
@@ -61,20 +61,26 @@ function MesAtual() {
     </li>)}
     </ul> 
 
+    const diaAtualTitulo = gerarDataAtualTitulo()
+
     return(
         <>
             <div className='conteudo'>
-                {isAllMarked ? <span onClick={() => {setBotOpenModal(true)}} className="material-symbols-outlined info-icon">
-                    check
-                </span> : null}
-                
-                <div className='box-dias'>
-                    <h1>{titulo}</h1>
+                <div className={isAllMarked ? 'set-borda' : null}>
+                    <div className='titulo'>
+                        <h1>{titulo}</h1>
+                        <p className='data-titulo'>{diaAtualTitulo}</p>
+                    </div>
                     {listaUl}
                 </div>
-                <div className='total'>
-                    <span>Total:</span>
-                    <span>{formatarDinheiro(valorTotal)}</span>
+                <div className={isAllMarked ? 'pai-total' : null}>
+                    <div className={isAllMarked ? 'total-no-margin' : 'total'}>
+                        <span>Total:</span>
+                        <span>{formatarDinheiro(valorTotal)}</span>
+                    </div>
+                    { isAllMarked ? <div className='caixa-check'>
+                    <span onClick={() => {setBotOpenModal(true)}}               className="material-symbols-outlined info-icon">check</span>
+                    </div> : null}
                 </div>
             </div>
             <Modal isOpen={botOpenModal} onFecharModal={() => {setBotOpenModal(!botOpenModal)}} />

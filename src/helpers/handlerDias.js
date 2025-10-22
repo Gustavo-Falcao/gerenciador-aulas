@@ -40,3 +40,15 @@ export function isObjetoAtual(objMesAtual) {
     const dataAtual = gerarDataAtual();
     return dataAtual.getMonth() === objMesAtual.mes
 }
+
+export function gerarDataAtualTitulo() {
+    const data = gerarDataAtual()
+    const dia = String(data.getDate()).padStart(2, '0');
+    const mes = data.getMonth()
+    const diaSemana = data.getDay()
+    const diasSemana = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
+    const meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+    const diaSemanaString = diasSemana[diaSemana];
+    const mesString = meses[mes];
+    return `${diaSemanaString}, ${dia} ${mesString} `
+}

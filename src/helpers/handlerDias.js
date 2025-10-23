@@ -48,7 +48,7 @@ export function gerarDataAtualTitulo() {
     const diaSemana = data.getDay()
     const diasSemana = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
     const meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
-    const diaSemanaString = diasSemana[diaSemana];
+    const diaSemanaString = diasSemana[diaSemana-1];
     const mesString = meses[mes];
     return `${diaSemanaString}, ${dia} ${mesString} `
 }

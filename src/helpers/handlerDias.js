@@ -47,11 +47,11 @@ function gerarDiaSemana(dia) {
     switch(dia) {
         case 0: diaSemana = "Dom"; break;
         case 1: diaSemana = "Seg"; break;
-        case 3: diaSemana = "Ter"; break;
-        case 4: diaSemana = "Qua"; break;
-        case 5: diaSemana = "Qui"; break;
-        case 6: diaSemana = "Sex"; break;
-        case 7: diaSemana = "Sáb"; break;
+        case 2: diaSemana = "Ter"; break;
+        case 3: diaSemana = "Qua"; break;
+        case 4: diaSemana = "Qui"; break;
+        case 5: diaSemana = "Sex"; break;
+        case 6: diaSemana = "Sáb"; break;
     }
 
     return diaSemana

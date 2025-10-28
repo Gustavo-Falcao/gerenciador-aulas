@@ -1,15 +1,15 @@
 import '../styles/mesAtual.css';
 import { gerarObjetoMesAtual, gerarTitulo, isObjetoAtual, gerarDataAtualTitulo} from '../helpers/handlerDias';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { formatarDinheiro } from '../helpers/handlerCurrency';
 import Modal from '../components/modal';
+import { gerarIdKey } from '../helpers/handlerId';
 
 function MesAtual() {
     const [objetoMesAtual, setObjetoMesAtual] = useState(() => {
         const objeto = localStorage.getItem('objMesAtual');
         if(objeto) {
-            const objFormat = JSON.parse(objeto);
-            return isObjetoAtual(objFormat) ? objFormat : gerarObjetoMesAtual();
+            return JSON.parse(objeto);
         }
         return gerarObjetoMesAtual();
     }) 
@@ -34,6 +34,15 @@ function MesAtual() {
     
     function toggle(id) {
         setObjetoMesAtual(prev => ({...prev, arrayDias: prev.arrayDias.map((item) => item.id === id ? {...item, marcado: !item.marcado} : item)}));
+    }
+
+    function fecharMes() {
+        const obj = localStorage.getItem('objMes')
+        if(obj) {
+            const objFormat = JSON.parse(obj)
+            //logica para o objeto que acabei de pegar e adicionar mais um que é o mes atual
+        }
+        localStorage.setItem('objMes', JSON.stringify({}))
     }
 
     const listaUl = <ul className='checklist clean'>
@@ -83,7 +92,7 @@ function MesAtual() {
                     </div> : null}
                 </div>
             </div>
-            <Modal isOpen={botOpenModal} onFecharModal={() => {setBotOpenModal(!botOpenModal)}} />
+            <Modal isOpen={botOpenModal} onFecharModal={() => {setBotOpenModal(!botOpenModal)}} onFecharMes={fecharMes} />
         </>
     )
 }

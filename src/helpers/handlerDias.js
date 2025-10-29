@@ -22,6 +22,28 @@ export function gerarObjetoMesAtual() {
     return {arrayDias: dias, mes: mes, ano: ano};
 }
 
+export function gerarObjetoProximoMes() {
+    const dataAtual = gerarDataAtual()
+    const mes = dataAtual.getMonth() === 11 ? 0 : dataAtual.getMonth()+1
+    console.log(`MES PEGO DO MES SEGUINTE => ${mes}`)
+    const ano = mes === 0 ? dataAtual.getFullYear()+1 : dataAtual.getFullYear()
+    console.log(`ANO GERADO => ${ano}`)
+    const dataFinal = new Date(ano, mes+1, 0);
+    console.log(`DATA GERADA COM O DIA 0 => ${dataFinal}`)
+    const diaFinal = dataFinal.getDate()
+    console.log(`DIA FINAL GERADO => ${diaFinal}`)
+
+    let dias = []
+
+    for(let dia = 1; dia <= diaFinal; dia ++) {
+        const novaData = new Date(ano, mes, dia)
+        if(novaData.getDay() === 1 || novaData.getDay() === 3) {
+            dias = [...dias, {id: gerarIdKey(), dataFormatada: formatarData(novaData), valor: 30, marcado: false}]
+        }
+    }
+    return {arrayDias: dias, mes: mes, ano: ano}
+}
+
 
 function formatarData(data) {
     const dia = String(data.getDate()).padStart(2, '0');
@@ -62,7 +84,6 @@ export function gerarDataAtualTitulo() {
     const dia = String(data.getDate()).padStart(2, '0');
     const mes = data.getMonth()
     const diaSemana = data.getDay()
-    console.log(`Dia semana numero => ${diaSemana}`)
     //const diasSemana = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
     const meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
     const diaSemanaString = gerarDiaSemana(diaSemana) 

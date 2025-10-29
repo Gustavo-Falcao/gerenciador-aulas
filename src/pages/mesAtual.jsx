@@ -1,5 +1,5 @@
 import '../styles/mesAtual.css';
-import { gerarObjetoMesAtual, gerarTitulo, isObjetoAtual, gerarDataAtualTitulo} from '../helpers/handlerDias';
+import { gerarObjetoMesAtual, gerarTitulo, gerarDataAtualTitulo, gerarObjetoProximoMes} from '../helpers/handlerDias';
 import { useEffect, useState } from 'react';
 import { formatarDinheiro } from '../helpers/handlerCurrency';
 import Modal from '../components/modal';
@@ -36,13 +36,25 @@ function MesAtual() {
         setObjetoMesAtual(prev => ({...prev, arrayDias: prev.arrayDias.map((item) => item.id === id ? {...item, marcado: !item.marcado} : item)}));
     }
 
+    function toggleModal() {
+        setBotOpenModal((prev) => !prev)
+    }
+
     function fecharMes() {
+        const objMesAtual = {id: gerarIdKey(), arrayDias: objetoMesAtual.arrayDias, ano: objetoMesAtual.ano, mes: objetoMesAtual.mes, quantAula: totalMarcado, valorTotal: valorTotal}
         const obj = localStorage.getItem('objMes')
         if(obj) {
+            console.log('O OBJETO É VERDADEIRO, VAI MODIFICAR O QUE EXISTE')
             const objFormat = JSON.parse(obj)
-            //logica para o objeto que acabei de pegar e adicionar mais um que é o mes atual
+            const newObj = [...objFormat, objMesAtual]
+            localStorage.setItem('objMes', newObj)
+        } else {
+            console.log('O OBJETO É FALSO, VAI CRIAR UM NOVO ARRAY MESES')
+            localStorage.setItem('objMes', JSON.stringify([objMesAtual]))
         }
-        localStorage.setItem('objMes', JSON.stringify({}))
+        localStorage.setItem('objMesAtual', JSON.stringify(gerarObjetoProximoMes()))
+        toggleModal()
+        setObjetoMesAtual(JSON.parse(localStorage.getItem('objMesAtual')))
     }
 
     const listaUl = <ul className='checklist clean'>
@@ -88,11 +100,11 @@ function MesAtual() {
                         <span>{formatarDinheiro(valorTotal)}</span>
                     </div>
                     { isAllMarked ? <div className='caixa-check'>
-                    <span onClick={() => {setBotOpenModal(true)}}               className="material-symbols-outlined info-icon">check</span>
+                    <span onClick={toggleModal} className="material-symbols-outlined info-icon">check</span>
                     </div> : null}
                 </div>
             </div>
-            <Modal isOpen={botOpenModal} onFecharModal={() => {setBotOpenModal(!botOpenModal)}} onFecharMes={fecharMes} />
+            <Modal isOpen={botOpenModal} onFecharModal={toggleModal} onFecharMes={fecharMes} />
         </>
     )
 }

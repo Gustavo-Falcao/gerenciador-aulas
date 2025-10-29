@@ -128,11 +128,6 @@ button {
     border-style: none;
     width: 320px;
 }
-nav {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-}
 button.meses {
     background-color: #22c55e;
     color: white;

@@ -108,9 +108,6 @@ details{
     border-top:1px dashed var(--border); 
     padding-top:8px
 }
-details[open] summary{
-    margin-bottom:8px
-}
 summary{
     list-style:none; 
     cursor:pointer; 

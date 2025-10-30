@@ -132,3 +132,25 @@ summary::-webkit-details-marker{
 .hidden{
     display:none
 }
+
+.icon {
+  height: 1.5em;
+  padding: 1.5em;
+}
+
+.bot-sair {
+  position: absolute;
+  left: 70%;
+  top: 12%;
+}
+
+.list-aula {
+  list-style: none;
+  padding: 0;
+  margin-left: 20px;
+}
+
+.list-aula > li {
+  padding: 7px 0px;
+  text-align: left;
+}

@@ -46,8 +46,10 @@ function MesAtual() {
         if(obj) {
             console.log('O OBJETO É VERDADEIRO, VAI MODIFICAR O QUE EXISTE')
             const objFormat = JSON.parse(obj)
+            console.log(objFormat)
+            console.log('Novo objeto mes modificado|||||||||||||||||||')
             const newObj = [...objFormat, objMesAtual]
-            localStorage.setItem('objMes', newObj)
+            localStorage.setItem('objMes', JSON.stringify(newObj))
         } else {
             console.log('O OBJETO É FALSO, VAI CRIAR UM NOVO ARRAY MESES')
             localStorage.setItem('objMes', JSON.stringify([objMesAtual]))

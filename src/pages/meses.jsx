@@ -92,7 +92,7 @@ function Meses() {
                     </article>
                 </section> */}
             </div>
-            <ModalAulas isOpen={botModal} listaAulas={listaForModal.current}/>
+            <ModalAulas isOpen={botModal} listaAulas={listaForModal.current} onClose={() => setBotModal((prev) => !prev)}/>
         </>
     )
 }

@@ -1,10 +1,14 @@
-function ModalAulas({isOpen, listaAulas}) {
+import cruzIcon  from '../assets/cruz.svg' 
+
+function ModalAulas({isOpen, listaAulas, onClose}) {
     if(isOpen) {
         return (
             <div className='background-modal'>
-                <span>sair</span>
+                <span className='bot-sair' onClick={onClose}> 
+                    <img src={cruzIcon} className='icon' alt="Cruz icon" />
+                </span>
                 <div className='janela-modal'>
-                    <ul>
+                    <ul className='list-aula'>
                         {listaAulas.map((aula) => (
                             <li key={aula.id}>{aula.dataFormatada}</li>
                         ))}

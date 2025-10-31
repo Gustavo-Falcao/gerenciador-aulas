@@ -134,14 +134,21 @@ summary::-webkit-details-marker{
 }
 
 .icon {
-  height: 1.5em;
-  padding: 1.5em;
+  height: 24px;
+  width: 24px;
 }
 
 .bot-sair {
   position: absolute;
-  left: 70%;
-  top: 12%;
+  left: 77%;
+  top: 7%;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  border-radius: 30px;
+  width: 40px;
+  height: 40px;
 }
 
 .list-aula {
@@ -151,6 +158,11 @@ summary::-webkit-details-marker{
 }
 
 .list-aula > li {
-  padding: 7px 0px;
+  padding: 10px 0px 10px 20px;
   text-align: left;
+  background-color: white;
+  max-width: 200px;
+  margin-bottom: 15px;
+  border-radius: 20px;
+  font-weight: 500;
 }

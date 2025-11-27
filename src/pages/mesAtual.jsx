@@ -64,24 +64,24 @@ function MesAtual() {
         <li 
             key={dia.id} 
             className={objetoMesAtual.arrayDias.length === (objetoMesAtual.arrayDias.indexOf(dia))+1 ? "check" : "check border-bottom"} 
-        >
-        <input 
-            type="checkbox" 
-            id={dia.id}
-            checked={dia.marcado}
-            onChange={() => toggle(dia.id)}
-            />
-        <label 
-            className={dia.marcado ? 'marcado' : undefined}
-            htmlFor={dia.id}
             >
-            {dia.dataFormatada}
-        </label>
-        <small 
-            className={dia.marcado ? "ok" : "badge"}>
-                {dia.marcado ? "Ok" : "Pendendte"}
-        </small>
-    </li>)}
+            <input 
+                type="checkbox" 
+                id={dia.id}
+                checked={dia.marcado}
+                onChange={() => toggle(dia.id)}
+                />
+            <label 
+                className={dia.marcado ? 'marcado' : undefined}
+                htmlFor={dia.id}
+                >
+                {dia.dataFormatada}
+            </label>
+            <small 
+                className={dia.marcado ? "ok" : "badge"}>
+                    {dia.marcado ? "Ok" : "Pendendte"}
+            </small>
+        </li>)}
     </ul> 
 
     const diaAtualTitulo = gerarDataAtualTitulo()

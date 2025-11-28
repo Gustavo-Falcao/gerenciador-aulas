@@ -8,11 +8,13 @@ export function gerarObjetoMesAtual() {
     const dataAtual = gerarDataAtual();
     const mes = dataAtual.getMonth();
     const ano = dataAtual.getFullYear();
-    const ultimaData = new Date(ano, mes, 0);
+    const ultimaData = new Date(ano, mes+1, 0);
     const ultimoDia = ultimaData.getDate();
 
     let dias = []
 
+    console.log(`ULTIMO DIAAAA =>> ${ultimoDia}`)
+console.log(`ULTIMO DAta =>> ${ultimaData}`)
     for(let dia = 1; dia <= ultimoDia; dia++) {
         const data = new Date(ano, mes, dia);
         if(data.getDay() === 1 || data.getDay() === 3) {

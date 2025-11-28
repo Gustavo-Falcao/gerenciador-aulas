@@ -1,6 +1,6 @@
 import '../styles/mesAtual.css';
 import { gerarObjetoMesAtual, gerarTitulo, gerarDataAtualTitulo, gerarObjetoProximoMes} from '../helpers/handlerDias';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { formatarDinheiro } from '../helpers/handlerCurrency';
 import Modal from '../components/modal';
 import { gerarIdKey } from '../helpers/handlerId';
@@ -13,15 +13,18 @@ function MesAtual() {
         }
         return gerarObjetoMesAtual();
     }) 
+    console.log(objetoMesAtual)
     const [botOpenModal, setBotOpenModal] = useState(false)
     const [botCheckAnimation, setbotCheckAnimation] = useState(false)
     const [totalToLeft, setTotalToLeft] = useState(false)
     const [showAnimationCaixaCheck, setshowAnimationCaixaCheck] = useState(false)
     const [valorTotal, setValorTotal] = useState(0);
     const titulo = gerarTitulo(objetoMesAtual.mes, objetoMesAtual.ano);
+    const totalMarcado = useRef(0);
 
     console.log(`Estado do botao para aparecer o check =>> ${showAnimationCaixaCheck}`)
     console.log(`Estado do total no left =>> ${totalToLeft}`)
+    console.log(`Total marcado =>>> ${totalMarcado.current}`)
 
     useEffect(() => {
         try {
@@ -30,13 +33,13 @@ function MesAtual() {
             console.log(`Erro ao salvar no localStorage => ${e}`)
         }
 
-        const totalMarcado = objetoMesAtual.arrayDias.reduce((acc, dia) => {
+        totalMarcado.current = objetoMesAtual.arrayDias.reduce((acc, dia) => {
         return acc + (dia.marcado ? 1 : 0);
         }, 0)
 
-        setValorTotal(totalMarcado * 30)
+        setValorTotal(totalMarcado.current * 30)
 
-        if(totalMarcado === objetoMesAtual.arrayDias.length && !totalToLeft && !showAnimationCaixaCheck) {
+        if(totalMarcado.current === objetoMesAtual.arrayDias.length && !totalToLeft && !showAnimationCaixaCheck) {
             setTotalToLeft(true)
             setTimeout(() => {
                 setshowAnimationCaixaCheck(true)
@@ -63,7 +66,7 @@ function MesAtual() {
     }
 
     function fecharMes() {
-        const objMesAtual = {id: gerarIdKey(), arrayDias: objetoMesAtual.arrayDias, ano: objetoMesAtual.ano, mes: objetoMesAtual.mes, quantAula: totalMarcado, valorTotal: valorTotal}
+        const objMesAtual = {id: gerarIdKey(), arrayDias: objetoMesAtual.arrayDias, ano: objetoMesAtual.ano, mes: objetoMesAtual.mes, quantAula: totalMarcado.current, valorTotal: valorTotal}
         const obj = localStorage.getItem('objMes')
         if(obj) {
             console.log('O OBJETO É VERDADEIRO, VAI MODIFICAR O QUE EXISTE')

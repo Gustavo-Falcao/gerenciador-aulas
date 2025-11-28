@@ -266,13 +266,13 @@ ul.checklist {
     z-index: 100;
     transition: 1s;
     position: absolute;
-    top: 59%;
+    top: 57%;
     left: 69%;
     width: fit-content;
 }
 
 .pai-caixa-check-show {
-    transform: translateY(72px);
+    transform: translateY(77px);
 }
 
 .inactive {

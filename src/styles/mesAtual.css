@@ -177,23 +177,12 @@ ul.checklist {
     border-bottom: 1px solid #70707036;
 }
 
-.background-modal {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
-    background-color: rgba(107, 107, 107, 0.569);
-    backdrop-filter: blur(2px);
-}
-
 .janela-modal {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: rgba(255, 255, 255, 0.315);
+    background-color: rgba(255, 255, 255, 0.598);
     text-align: center;
     min-width: 260px;
     border-radius: 30px;
@@ -278,12 +267,14 @@ ul.checklist {
 .inactive {
     box-shadow:  rgba(0, 0, 0, 0.08) 0px 7px 2px,
   rgba(0, 0, 0, 0.18) 0px 8px 5px;
-    opacity: 0.7;
+    opacity: 0.9;
+    transition: 1s ease;
 }
 
 .active {
  box-shadow: rgba(0, 0, 0, 0.08) 0px 3px 2px,rgba(0, 0, 0, 0.18) 0px 3px 5px;
  opacity: 1;
+ transition: 1s ease;
 }
 
 /* From Uiverse.io by satyamchaudharydev */ 

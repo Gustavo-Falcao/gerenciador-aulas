@@ -59,10 +59,15 @@ function MesAtual() {
     }
 
     function toggleModal() {
-        setTimeout(() => {
+        if(!botOpenModal) {
+            setTimeout(() => {
+                setBotOpenModal((prev) => !prev)
+            }, 800)
+            setbotCheckAnimation((prev) => !prev) 
+        } else {
+            setbotCheckAnimation((prev) => !prev) 
             setBotOpenModal((prev) => !prev)
-        }, 200)
-        setbotCheckAnimation((prev) => !prev) 
+        }
     }
 
     function fecharMes() {

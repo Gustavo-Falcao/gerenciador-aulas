@@ -1,7 +1,7 @@
 const STYLES_MODAL = {
     backgroundModal: {
-        backgroundColor: 'rgba(163, 163, 163, 0.57)',
-        // backdropFilter: 'blur(2px)',
+        backgroundColor: 'rgba(160, 160, 160, 0.48)',
+        backdropFilter: 'blur(1px)',
         position: 'fixed',
         top: '0',
         bottom: '0',

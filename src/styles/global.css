@@ -16,16 +16,6 @@ body {
     color: var(--color);
 }
 
-.footer{
-    position:fixed; left:0; right:0; bottom:0;
-}
-
 #root {
     height: 100vh;
-}
-
-nav {
-    width: 100%;
-    display: flex;
-    justify-content: center;
 }

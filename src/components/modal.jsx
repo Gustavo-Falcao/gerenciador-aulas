@@ -1,19 +1,25 @@
-function Modal({isOpen, onFecharModal, onFecharMes}) {
+const STYLES_MODAL = {
+    backgroundModal: {
+        backgroundColor: 'rgba(163, 163, 163, 0.57)',
+        // backdropFilter: 'blur(2px)',
+        position: 'fixed',
+        top: '0',
+        bottom: '0',
+        left: '0',
+        right: '0',
+        zIndex: '1000'
+    }
+}
+
+function Modal({isOpen, children}) {
     if (isOpen) {
         return (
-            <div className='background-modal'>
-                <div className='janela-modal'>
-                    <div className="text">
-                        <h2>Deseja fechar esse mês ?</h2>
-                        <p>Ao fechar o mês, será gerado uma nova lista com as aulas do mês seguinte.</p>
-                    </div>
-                    <div className="options">
-                        <button onClick={onFecharModal} className="bot-modal">Cancel</button>
-                        <button onClick={onFecharMes} className="bot-modal fechar">Fechar</button>
-                    </div>
-                </div>
+            <div style={STYLES_MODAL.backgroundModal}>
+                {children}
             </div> 
         )
+    } else {
+        return null
     }
 }
 

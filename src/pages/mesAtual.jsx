@@ -14,21 +14,40 @@ function MesAtual() {
         return gerarObjetoMesAtual();
     }) 
     const [botOpenModal, setBotOpenModal] = useState(false)
+    const [botCheckAnimation, setbotCheckAnimation] = useState(false)
+    const [totalToLeft, setTotalToLeft] = useState(false)
+    const [showAnimationCaixaCheck, setshowAnimationCaixaCheck] = useState(false)
+    const [valorTotal, setValorTotal] = useState(0);
     const titulo = gerarTitulo(objetoMesAtual.mes, objetoMesAtual.ano);
 
-    const totalMarcado = objetoMesAtual.arrayDias.reduce((acc, dia) => {
-        return acc + (dia.marcado ? 1 : 0);
-    }, 0)
-
-    const valorTotal = totalMarcado * 30
-
-    const isAllMarked = totalMarcado === objetoMesAtual.arrayDias.length;
+    console.log(`Estado do botao para aparecer o check =>> ${showAnimationCaixaCheck}`)
+    console.log(`Estado do total no left =>> ${totalToLeft}`)
 
     useEffect(() => {
         try {
             localStorage.setItem('objMesAtual', JSON.stringify(objetoMesAtual));
         } catch (e) {
             console.log(`Erro ao salvar no localStorage => ${e}`)
+        }
+
+        const totalMarcado = objetoMesAtual.arrayDias.reduce((acc, dia) => {
+        return acc + (dia.marcado ? 1 : 0);
+        }, 0)
+
+        setValorTotal(totalMarcado * 30)
+
+        if(totalMarcado === objetoMesAtual.arrayDias.length && !totalToLeft && !showAnimationCaixaCheck) {
+            setTotalToLeft(true)
+            setTimeout(() => {
+                setshowAnimationCaixaCheck(true)
+            }, 1000)
+        }else {
+            if(totalToLeft && showAnimationCaixaCheck) {
+                setTimeout(() => {
+                    setTotalToLeft(false)
+                }, 1000)
+                setshowAnimationCaixaCheck(false)
+            }
         }
     },[objetoMesAtual])
     
@@ -37,7 +56,10 @@ function MesAtual() {
     }
 
     function toggleModal() {
-        setBotOpenModal((prev) => !prev)
+        setTimeout(() => {
+            setBotOpenModal((prev) => !prev)
+        }, 200)
+        setbotCheckAnimation((prev) => !prev) 
     }
 
     function fecharMes() {
@@ -89,24 +111,37 @@ function MesAtual() {
     return(
         <>
             <div className='conteudo'>
-                <div className={isAllMarked ? 'set-borda' : null}>
+                <div className={totalToLeft ? 'set-borda calendar' : 'calendar'}>
                     <div className='titulo'>
                         <h1>{titulo}</h1>
                         <p className='data-titulo'>{diaAtualTitulo}</p>
                     </div>
                     {listaUl}
                 </div>
-                <div className={isAllMarked ? 'pai-total' : null}>
-                    <div className={isAllMarked ? 'total-no-margin' : 'total'}>
-                        <span>Total:</span>
-                        <span>{formatarDinheiro(valorTotal)}</span>
-                    </div>
-                    { isAllMarked ? <div className='caixa-check'>
-                    <span onClick={toggleModal} className="material-symbols-outlined info-icon">check</span>
-                    </div> : null}
+                <div className={totalToLeft ? 'total total-to-left' : 'total'}>
+                    <span>Total:</span>
+                    <span>{formatarDinheiro(valorTotal)}</span>
                 </div>
+                <div className= {showAnimationCaixaCheck ? 'pai-caixa-check pai-caixa-check-show' : 'pai-caixa-check'} >
+                    <div className={`caixa-check ${botCheckAnimation ? 'active' : 'inactive'}`}onClick={toggleModal}>
+                <span className="material-symbols-outlined info-icon">check</span>
+                </div>
+                </div>
+                
+                
             </div>
-            <Modal isOpen={botOpenModal} onFecharModal={toggleModal} onFecharMes={fecharMes} />
+            <Modal isOpen={botOpenModal}>
+                <div className='janela-modal'>
+                    <div className="text">
+                        <h2>Deseja fechar esse mês ?</h2>
+                        <p>Ao fechar o mês, será gerado uma nova lista com as aulas do mês seguinte.</p>
+                    </div>
+                    <div className="options">
+                        <button onClick={toggleModal} className="bot-modal">Cancel</button>
+                        <button onClick={fecharMes} className="bot-modal fechar">Fechar</button>
+                    </div>
+                </div>
+            </Modal>
         </>
     )
 }

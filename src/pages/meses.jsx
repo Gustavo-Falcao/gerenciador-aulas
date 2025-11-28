@@ -1,7 +1,8 @@
 import { useRef, useState } from 'react';
 import { gerarTitulo } from '../helpers/handlerDias.js';
 import { formatarDinheiro } from '../helpers/handlerCurrency.js';
-import ModalAulas from '../components/modalAulas.jsx';
+import Modal from '../components/modal.jsx';
+import cruzIcon from '../assets/cruz.svg'
 import '../styles/meses.css';
 function Meses() {
 
@@ -74,25 +75,19 @@ function Meses() {
                     ))}
                 </section>
 
-                {/* <section className="grid" id="grid">
-                    <article className="card" data-search="jan janeiro pago">
-                        <div className="row">
-                            <div><strong>JAN 2025</strong></div>
-                            <span className="status">Pago</span>
-                        </div>
-                        <div>9 aulas • R$ 270,00</div>
-                        <div className="actions">
-                            <details>
-                                <summary className="btn">Ver detalhes</summary>
-                                <div>Dias: 01/01, 03/01, 05/01, 08/01, 12/01, 15/01, 19/01, 22/01, 29/01</div>
-                                <div>Observações: —</div>
-                                <div><strong>Total:</strong> 9 x R$ 30,00 = R$ 270,00</div>
-                            </details>
-                        </div>
-                    </article>
-                </section> */}
             </div>
-            <ModalAulas isOpen={botModal} listaAulas={listaForModal.current} onClose={() => setBotModal((prev) => !prev)}/>
+            <Modal isOpen={botModal}>
+                <span className='bot-sair' onClick={() => setBotModal((prev) => !prev)}> 
+                    <img src={cruzIcon} className='icon' alt="Cruz icon" />
+                </span>
+                <div className='janela-modal'>
+                    <ul className='list-aula'>
+                        {listaForModal.current.map((aula) => (
+                            <li key={aula.id}>{aula.dataFormatada}</li>
+                        ))}
+                    </ul>
+                </div>
+            </Modal>
         </>
     )
 }

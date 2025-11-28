@@ -71,7 +71,9 @@ function MesAtual() {
     }
 
     function fecharMes() {
-        const objMesAtual = {id: gerarIdKey(), arrayDias: objetoMesAtual.arrayDias, ano: objetoMesAtual.ano, mes: objetoMesAtual.mes, quantAula: totalMarcado.current, valorTotal: valorTotal}
+        const objMesAtual = {id: gerarIdKey(), arrayDias: objetoMesAtual.arrayDias, ano: objetoMesAtual.ano, mes: objetoMesAtual.mes, quantAula: totalMarcado.current, valorTotal: valorTotal};
+        const mesAtual = objetoMesAtual.mes;
+        const anoAtual = objetoMesAtual.ano;
         const obj = localStorage.getItem('objMes')
         if(obj) {
             console.log('O OBJETO É VERDADEIRO, VAI MODIFICAR O QUE EXISTE')
@@ -84,12 +86,12 @@ function MesAtual() {
             console.log('O OBJETO É FALSO, VAI CRIAR UM NOVO ARRAY MESES')
             localStorage.setItem('objMes', JSON.stringify([objMesAtual]))
         }
-        localStorage.setItem('objMesAtual', JSON.stringify(gerarObjetoProximoMes()))
+        localStorage.setItem('objMesAtual', JSON.stringify(gerarObjetoProximoMes(mesAtual, anoAtual)))
         toggleModal()
         setObjetoMesAtual(JSON.parse(localStorage.getItem('objMesAtual')))
     }
 
-    const listaUl = <ul className='checklist clean'>
+    const listaUl = <ul className={objetoMesAtual.arrayDias.length > 8 ? 'checklist set-rolagem' : 'checklist'}>
         {objetoMesAtual.arrayDias.map((dia) => 
         <li 
             key={dia.id} 

@@ -24,11 +24,13 @@ console.log(`ULTIMO DAta =>> ${ultimaData}`)
     return {arrayDias: dias, mes: mes, ano: ano};
 }
 
-export function gerarObjetoProximoMes() {
-    const dataAtual = gerarDataAtual()
-    const mes = dataAtual.getMonth() === 11 ? 0 : dataAtual.getMonth()+1
-    console.log(`MES PEGO DO MES SEGUINTE => ${mes}`)
-    const ano = mes === 0 ? dataAtual.getFullYear()+1 : dataAtual.getFullYear()
+export function gerarObjetoProximoMes(mesAtual, anoAtual) {
+    //const dataAtual = gerarDataAtual()
+    //const mes = dataAtual.getMonth() === 11 ? 0 : dataAtual.getMonth()+1
+    //console.log(`MES PEGO DO MES SEGUINTE => ${mes}`)
+    //const ano = mes === 0 ? dataAtual.getFullYear()+1 : dataAtual.getFullYear()
+    const mes = mesAtual === 11 ? 0 : mesAtual+1;
+    const ano = mes === 0 ? anoAtual+1 : anoAtual;
     console.log(`ANO GERADO => ${ano}`)
     const dataFinal = new Date(ano, mes+1, 0);
     console.log(`DATA GERADA COM O DIA 0 => ${dataFinal}`)

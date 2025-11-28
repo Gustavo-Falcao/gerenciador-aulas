@@ -8,7 +8,7 @@ const NAV_KEY = 'nave-page';
 const STYLES_HOME = {
     
     footerStyle: {
-        position: "absolute",
+        position: "fixed",
         zIndex: "300",
         top: "85%",
         bottom: "0",

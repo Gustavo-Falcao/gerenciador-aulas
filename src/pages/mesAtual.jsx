@@ -33,9 +33,13 @@ function MesAtual() {
         return objArrayFullDiasAndObjMesAtual.arrayFullMes
     });
     const [atualizacao, setAtualizacao] = useState(() => {
-        const estadoAtualizacao = localStorage.getItem('_ATUALIZACAO_') ?? true;
+        const estadoAtualizacao = localStorage.getItem('_ATUALIZACAO_')
 
-        return estadoAtualizacao;
+        if(estadoAtualizacao === null || estadoAtualizacao) {
+            return true;
+        } else {
+            return false;
+        }
     });
     console.log(`Estado da atualizacao => ${atualizacao}`);
     const timerMostrarChekAnimacao = useRef(null);

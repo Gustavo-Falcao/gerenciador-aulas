@@ -35,7 +35,7 @@ function MesAtual() {
     const [atualizacao, setAtualizacao] = useState(() => {
         const estadoAtualizacao = localStorage.getItem('_ATUALIZACAO_')
 
-        if(estadoAtualizacao === null || estadoAtualizacao) {
+        if(estadoAtualizacao === null || estadoAtualizacao === true) {
             return true;
         } else {
             return false;

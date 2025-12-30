@@ -80,7 +80,7 @@ function Meses() {
                 <span className='bot-sair' onClick={() => setBotModal((prev) => !prev)}> 
                     <img src={cruzIcon} className='icon' alt="Cruz icon" />
                 </span>
-                <div className='janela-modal'>
+                <div className='janela-modal janela-modal-para-fechar-mes'>
                     <ul className='list-aula'>
                         {listaForModal.current.map((aula) => (
                             <li key={aula.id}>{aula.dataFormatada}</li>

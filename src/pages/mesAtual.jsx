@@ -1,6 +1,6 @@
 import '../styles/mesAtual.css';
 import { gerarTitulo, gerarDataAtualTitulo, gerarObjetoProximoMes, gerarArrayTodosOsDiasMesAtualAndObjMesAtual, gerarArrayTodosOsDiasMesAtualAndObjMesAtualParaAtualizacao, gerarArrayTodosOsDiasProximoMesEObjetoMesAtualProximoMes} from '../helpers/handlerDias';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { formatarDinheiro } from '../helpers/handlerCurrency';
 import Modal from '../components/modal';
 import { gerarIdKey } from '../helpers/handlerId';
@@ -48,6 +48,7 @@ function MesAtual() {
     const objUltimoDiaEscolhido = useRef({id: null, invalido: null});
     const idDiaSerTrocado = useRef(null);
     const objDiaSerDeletado = useRef({id: null, dataFormatada: null});
+    const boxRef = useRef(null);
 
     useEffect(() => {
         try {
@@ -90,6 +91,27 @@ function MesAtual() {
     useEffect(() => {
         localStorage.setItem('_ATUALIZACAO_', atualizacao);
     }, [atualizacao]);
+
+    useLayoutEffect(() => {
+        if(!botOpenModal) return;
+        if(botOpenDeleteDiaModal) return;
+        const elemento = boxRef.current;
+
+        if(!elemento) return;
+
+        const indexElemento = arrayDiasAlterar.findIndex((dia) => dia.id === idDiaSerTrocado.current);
+        
+        //centralizando o dia clicado para deixar visivel no calendario
+        if(indexElemento > 8) {
+            let linhas = 0;
+            for(let i = 1; i <= arrayDiasAlterar.length; i++) {
+                if(i % 3 === 0) linhas++;
+                
+                if(i >= indexElemento) break;
+            }
+            elemento.scrollTop = 109.5 + (97*(linhas-1));
+        }
+    }, [botOpenModal]);
 
     function toggle(id) {
         setObjetoMesAtual(prev => ({...prev, arrayDias: prev.arrayDias.map((item) => item.id === id ? {...item, marcado: !item.marcado} : item)}));
@@ -156,6 +178,17 @@ function MesAtual() {
 
     }
 
+    function abrirOpcoesAlterarDia(dia) {
+        const diaDoArrayFullDias = arrayDiasAlterar.find((diaEncontrar) => diaEncontrar.id === dia.id);
+
+        objUltimoDiaEscolhido.current = {id: dia.id, invalido: diaDoArrayFullDias.invalido};
+
+        idDiaSerTrocado.current = dia.id;
+
+        setArrayDiasAlterar(prev => prev.map((dias) => dias.id === dia.id ? {...dias, marcado: true, invalido: false} : dias)) 
+        setBotOpenModal((prev) => !prev)
+    }
+
     const listaUl = <ul className='checklist'>
         {objetoMesAtual.arrayDias.map((dia) => 
         <li 
@@ -179,14 +212,7 @@ function MesAtual() {
                     htmlFor={dia.id}
                     onClick={() => {
                         if(botAcionarEdicao) {
-                            const diaDoArrayFullDias = arrayDiasAlterar.find((diaEncontrar) => diaEncontrar.id === dia.id);
-
-                            objUltimoDiaEscolhido.current = {id: dia.id, invalido: diaDoArrayFullDias.invalido};
-
-                            idDiaSerTrocado.current = dia.id;
-
-                            setArrayDiasAlterar(prev => prev.map((dias) => dias.id === dia.id ? {...dias, marcado: true, invalido: false} : dias)) 
-                            setBotOpenModal((prev) => !prev)
+                           abrirOpcoesAlterarDia(dia);
                         }
                     }}
                     >
@@ -390,7 +416,11 @@ function MesAtual() {
                     <div className='janela-modal janela-modal-para-alterar-dia'>
                         <div className="header-alterar-dia">
                             <h2>Alterar dia</h2>
-                            <div className='calendar-container' onClick={handlerEscolhaDiaAlterar}>
+                            <div 
+                            className='calendar-container' 
+                            onClick={handlerEscolhaDiaAlterar}
+                            ref={boxRef}
+                            >
                                 {listaDiasParaAlterar}
                             </div> 
                         </div>

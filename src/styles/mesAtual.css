@@ -17,7 +17,7 @@ h1 {
 .titulo {
     background-color: #D6D9D7;
     padding: 10px 10px;
-    border-radius: 20px 20px 0px 0px;
+    border-radius: 0px;
     display: flex;
     flex-direction: row;
     justify-content: space-around;

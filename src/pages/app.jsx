@@ -16,6 +16,7 @@ const STYLES_HOME = {
         left: "0",
         right: "0",
         display: "flex",
+        backdropFilter: 'blur(5px)',
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center"

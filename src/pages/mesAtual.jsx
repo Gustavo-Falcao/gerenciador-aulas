@@ -375,7 +375,11 @@ function MesAtual() {
                     <span>{formatarDinheiro(valorTotal)}</span>
                 </div>
                 <div className= {showAnimationCaixaCheck ? 'pai-caixa-check pai-caixa-check-show' : 'pai-caixa-check'} >
-                    <div className={`caixa-check ${botCheckAnimation ? 'active' : 'inactive'}`}onClick={toggleModal}>
+                    <div className={`caixa-check ${botCheckAnimation ? 'active' : 'inactive'}`}onClick={() => {
+                        if(!botAcionarEdicao){
+                          toggleModal() 
+                        }
+                    }}>
                 <span className="material-symbols-outlined info-icon">check</span>
                 </div>
                 </div>

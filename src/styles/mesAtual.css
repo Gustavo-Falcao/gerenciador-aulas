@@ -17,7 +17,7 @@ h1 {
     border-radius: 0px;
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
     
 }
@@ -214,11 +214,10 @@ ul.checklist > li:last-child {
     position: fixed;
     top: 50%;
     left: 50%;
-    background-color: rgba(255, 255, 255, 0.598);
+    background-color: rgba(255, 255, 255, 0.73);
     min-width: 260px;
     border-radius: 30px;
     padding: 20px;
-    border: 1px solid white;
     backdrop-filter: blur(2px);
 }
 
@@ -442,3 +441,224 @@ button:active {
   top: 4px;
   box-shadow: #c0392b 0px 3px 2px,#000 0px 3px 5px;
 } */
+
+.header-title {
+    display: flex;
+    gap: 15px;
+}
+
+.burguer {
+    width: 44px;
+    height: 44px;
+    border: 0;
+    background: transparent;
+    position: relative;
+}
+
+.burguer span {
+    position: absolute;
+    left: 10px;
+    right:  10px;
+    height: 2px;
+    border-radius: 999px;
+    background-color: black;
+    transition: transform 200ms ease, opacity 200ms ease, top 200ms ease;
+}
+
+.burguer span:nth-child(1) {top: 14px;}
+.burguer span:nth-child(2) {top: 21px;}
+.burguer span:nth-child(3) {top: 28px;}
+
+.burguer.is-open span:nth-child(1) {
+    top: 21px;
+    transform: rotate(45deg);
+}
+
+.burguer.is-open span:nth-child(2) {
+    opacity: 0;
+}
+
+.burguer.is-open span:nth-child(3) {
+    top: 21px;
+    transform: rotate(-45deg);
+}
+
+.op-menu {
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(0, 0, 0, 0.652);
+    backdrop-filter: blur(2px);
+    /* padding: 40px 40px; */
+    /* width: 80px; */
+    border-radius: 30px;
+    color: white;
+    width: max-content;
+    white-space: nowrap;
+}
+
+.menu {
+    position: absolute;
+    /* transform: translate(-75px, 40px); */
+    z-index: 300;
+}
+
+.menu-edit {
+    top: 40px;
+    left: -30px;
+}
+
+.op-menu span {
+    display: block;
+    white-space: nowrap;
+    letter-spacing: 0.3px;
+    text-align: center;
+    font-size: 18px;
+    width: 100%;
+    margin: 5px 0px;
+}
+
+/* .op-menu span:nth-child(1) {
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgb(255, 255, 255);
+} */
+
+.op-menu-expandido {
+    /* 191 - 153*/
+    padding: 10px 10px;
+    min-width: 171px;
+    min-height: 133px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    
+}
+
+.op-menu-edit-valor-aula {
+    padding: 10px 10px;
+    min-width: 220px;
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.menu-expandido-edit-valor-aula {
+    top: 40px;
+    left: -190px;
+}
+
+.op-menu-normal {
+    padding: 20px 20px;
+}
+
+.options-menu {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+}
+
+.options-menu-expandido {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.options-menu-expandido div {
+    font-size: 17px;
+}
+
+.options-menu-expandido span {
+    display: inline-block;
+    width: fit-content;
+    margin-right: 10px;
+}
+
+.menu-expandido {
+    top: 40px;
+    left: -140px;
+}
+
+
+
+.bot-voltar {
+  /* width: fit-content; */
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  /* display: grid; */
+  /* place-items: center; */
+  /* color: #ffffff; */
+}
+
+.bot-voltar span:nth-child(1) {
+    padding-bottom: 15px;
+    border-bottom: 3px solid rgb(255, 255, 255);
+}
+
+.seta{
+width: 10px;
+  height: 10px;
+  /* Cria as linhas da seta */
+  border-top: 3px solid #ffffff;
+  border-left: 3px solid #ffffff;
+  /* Rotaciona o quadrado para formar o < */
+  transform: rotate(-45deg);
+}
+
+.header-menu {
+    display: flex;
+}
+
+.header-menu span {
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.op-menu h2 {
+    padding-top: 20px;
+}
+
+.icon-export {
+    height: 24px;
+    width: 24px;
+}
+
+.icon-import {
+    height: 20px;
+    width: 20px;
+}
+
+.option-com-icon {
+    display: flex;
+    align-items: center;
+}
+
+.input-valor-aula {
+    font-size: 16px;
+    width: 100px;
+    background-color: rgba(159, 158, 158, 0.096);
+    color: white;
+    border: 2px solid rgba(197, 197, 197, 0.652);
+    border-radius: 10px;
+    outline: none;
+}
+
+.campo-valor {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+}
+
+.bot-salvar-valor-aula {
+    width: fit-content;
+    font-size: 16px;
+    font-weight: 500;
+    background-color: rgba(0, 0, 0, 0);
+    padding: 12px 37px;
+    border-radius: 50px;
+    border: 2px solid rgba(197, 197, 197, 0.652);
+    letter-spacing: .2px;
+    color: white;
+}

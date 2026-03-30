@@ -4,6 +4,12 @@ function gerarDataAtual() {
     return new Date();
 }
 
+function valorAulaNumber() {
+    const valorAulaString = localStorage.getItem('VALOR_AULA') || "3000"
+    const valorAulaStringSoNumero = valorAulaString.replace(/\D/g,"")
+    return Number(valorAulaStringSoNumero) / 100;
+}
+
 // export function gerarObjetoMesAtual() {
 //     const dataAtual = gerarDataAtual();
 //     const mes = dataAtual.getMonth();
@@ -85,7 +91,7 @@ export function gerarArrayTodosOsDiasMesAtualAndObjMesAtual() {
             novoArrDias.push({
                 id: arrayFullMes[dia].id,
                 dataFormatada: arrayFullMes[dia].dataFormatada,
-                valor: 30,
+                valor: valorAulaNumber(),
                 marcado: false
             });
         }
@@ -193,7 +199,7 @@ export function gerarObjetoProximoMes(mesAtual, anoAtual) {
                 {
                     id: gerarIdKey(), 
                     dataFormatada: formatarData(novaData), 
-                    valor: 30, 
+                    valor: valorAulaNumber(), 
                     marcado: false
                 }]
         }

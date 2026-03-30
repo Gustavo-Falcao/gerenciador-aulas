@@ -23,13 +23,22 @@ function Meses() {
 
     const [ano, setAno] = useState("")
     const [buscaMes, setBuscaMes] = useState("");
-    const [botModal, setBotModal] = useState(false)
+    const [botModal, setBotModal] = useState(false);
+    const [arrayDiasCalendario, setArrayDiasCalendario] = useState([]);
 
-    const listaForModal = useRef([])
     const keyTimeOutBusca = useRef(null)
+    const tituloCalendario = useRef('')
+    const primeiroDiaSemana = useRef('')
 
-    function abrirModal(arrayDias) {
-        listaForModal.current = arrayDias
+    function abrirModal(mes) {
+        // pegar o mes inteiro do mes atual
+        // deixar como marcado os meses que tiveram aula
+        // pegar o dia da semana do primeiro dia do mes
+        // verificar quantos dias tem do primeiro dia do mes até o domingo para setar os dias vazios
+
+        tituloCalendario.current = gerarTitulo(mes.mes, mes.ano)
+        primeiroDiaSemana.current = mes.arrayMes[0].nomeDiaSemana
+        setArrayDiasCalendario(mes.arrayMes)
         setBotModal(true);
     }
 
@@ -64,6 +73,49 @@ function Meses() {
         keyTimeOutBusca.current = setTimeout(() => {
             setBuscaMes(currentValue.trim());
         }, 600);
+    }
+
+
+    function quantidadeDiasVazio(nomePrimeiroDiaSemana) {
+        let quantDiasVazios = 0;
+        
+        switch (nomePrimeiroDiaSemana) {
+            case "Domingo":
+                quantDiasVazios = 0;
+                break;
+            case "Segunda": 
+                quantDiasVazios = 1;
+                break;
+            case "Terça": 
+                quantDiasVazios = 2;
+                break;
+            case "Quarta": 
+                quantDiasVazios = 3;
+                break;
+            case "Quinta": 
+                quantDiasVazios = 4;
+                break;
+            case "Sexta": 
+                quantDiasVazios = 5;
+                break;
+            case "Sábado": 
+                quantDiasVazios = 6;
+                break;
+        }
+        return quantDiasVazios
+    }
+
+    function gerarDiaNumber(dia) {
+        const [day, mes] = dia.split('/')
+        return Number(day)
+    }
+
+    function gerarDiaCalendario(dia) {
+        let data = dia.dataNumerosString;
+        
+        const diaSemZero = gerarDiaNumber(data)
+
+        return <div key={dia.id} className={dia.invalido ? 'day is-done' : 'day'}>{diaSemZero}</div>
     }
 
     return (
@@ -107,7 +159,7 @@ function Meses() {
                             </div>
                             <div className='actions'>
                                 <details>
-                                    <summary className='btn' onClick={() => abrirModal(mes.arrayDias)}>Ver detalhes</summary>
+                                    <summary className='btn' onClick={() => abrirModal(mes)}>Ver detalhes</summary>
                                 </details>
                             </div>
                         </article>
@@ -120,11 +172,82 @@ function Meses() {
                     <img src={cruzIcon} className='icon' alt="Cruz icon" />
                     </span>
                 <div className='janela-modal janela-modal-para-mostrar-meses'>
-                    <ul className='list-aula'>
+                    {/* <ul className='list-aula'>
                         {listaForModal.current.map((aula) => (
                             <li key={aula.id}>{aula.dataFormatada}</li>
                         ))}
-                    </ul>
+                    </ul> */}
+                    <div class="calendar-header">
+                        <h2>{tituloCalendario.current}</h2>
+                    </div>
+
+                        <div class="calendar-grid">
+                            <div class="weekday">D</div>
+                            <div class="weekday">S</div>
+                            <div class="weekday">T</div>
+                            <div class="weekday">Q</div>
+                            <div class="weekday">Q</div>
+                            <div class="weekday">S</div>
+                            <div class="weekday">S</div>
+
+                            {Array.from(
+                                {length: quantidadeDiasVazio(primeiroDiaSemana.current)},
+                                (_, index) => <div key={`empty-${index}`} className='day empty-day'></div>
+                            )}
+
+                            {arrayDiasCalendario.map((dia) => 
+                                gerarDiaCalendario(dia)   
+                            )}
+
+                        </div>
+                    {/* <div class="calendar-grid">
+                        <div class="weekday">D</div>
+                        <div class="weekday">S</div>
+                        <div class="weekday">T</div>
+                        <div class="weekday">Q</div>
+                        <div class="weekday">Q</div>
+                        <div class="weekday">S</div>
+                        <div class="weekday">S</div>
+
+                        <div class="day empty-day"></div>
+                        <div class="day empty-day"></div>
+                        <div class="day empty-day"></div>
+                        <div class="day empty-day"></div>
+
+                        <div class="day">1</div>
+                        <div class="day">2</div>
+                        <div class="day">3</div>
+                        <div class="day">4</div>
+                        <div class="day">5</div>
+                        
+                        <div class="day is-done">6</div> 
+                        
+                        <div class="day">7</div>
+                        <div class="day">8</div>
+                        <div class="day">9</div>
+                        <div class="day">10</div>
+                        <div class="day">11</div>
+                        <div class="day">12</div>
+                        <div class="day">13</div>
+                        <div class="day">14</div>
+                        <div class="day">15</div>
+                        <div class="day">16</div>
+                        <div class="day">17</div>
+                        <div class="day">18</div>
+                        <div class="day">19</div>
+                        <div class="day">20</div>
+                        <div class="day">21</div>
+                        <div class="day">22</div>
+                        <div class="day">23</div>
+                        <div class="day">24</div>
+                        <div class="day">25</div>
+                        <div class="day">26</div>
+                        <div class="day">27</div>
+                        <div class="day">28</div>
+                        <div class="day">29</div>
+                        <div class="day">30</div>
+                        <div class="day">31</div>
+                    </div> */}
                 </div>
             </Modal>
         </>

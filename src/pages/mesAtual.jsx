@@ -1,9 +1,17 @@
 import '../styles/mesAtual.css';
 import { gerarTitulo, gerarDataAtualTitulo, gerarObjetoProximoMes, gerarArrayTodosOsDiasMesAtualAndObjMesAtual, gerarArrayTodosOsDiasMesAtualAndObjMesAtualParaAtualizacao, gerarArrayTodosOsDiasProximoMesEObjetoMesAtualProximoMes} from '../helpers/handlerDias';
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { use, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { formatarDinheiro } from '../helpers/handlerCurrency';
 import Modal from '../components/modal';
+import DeleteModalConteudo from '../components/deleteModal';
+import EditModal from '../components/editModal';
+import FecharMesModal from '../components/fecharMesModal';
+import ButtonAnimate from '../components/buttonAnimate';
+import MenuEditModal from '../components/menuEditModal';
+import InputDinheiro from '../components/inputDinheiro';
 import { gerarIdKey } from '../helpers/handlerId';
+import exportar from '../assets/compartilhar.png';
+import importar from '../assets/adicionar.png'
 
 function MesAtual() {
     const objArrayFullDiasAndObjMesAtual = gerarArrayTodosOsDiasMesAtualAndObjMesAtual();
@@ -23,8 +31,8 @@ function MesAtual() {
     const [showAnimationCaixaCheck, setshowAnimationCaixaCheck] = useState(false)
     const [valorTotal, setValorTotal] = useState(0);
     const [botAcionarEdicao, setBotAcionarEdicao] = useState(false)
+    const [isMenuAtivo, setIsMenuAtivo] = useState(false)
     const titulo = gerarTitulo(objetoMesAtual.mes, objetoMesAtual.ano);
-    const totalMarcado = useRef(0);
     const [arrayDiasAlterar, setArrayDiasAlterar] = useState(() => {
         const arrayFullDias = localStorage.getItem('ARR_FULL_DIAS');
         if(arrayFullDias) {
@@ -32,16 +40,22 @@ function MesAtual() {
         }
         return objArrayFullDiasAndObjMesAtual.arrayFullMes
     });
-    const [atualizacao, setAtualizacao] = useState(() => {
-        const estadoAtualizacao = localStorage.getItem('_ATUALIZACAO_')
-
-        if(estadoAtualizacao === null || estadoAtualizacao === true) {
-            return true;
-        } else {
-            return false;
-        }
-    });
-    console.log(`Estado da atualizacao => ${atualizacao}`);
+    const [menuFilesIsOpen, setMenuFilesIsOpen] = useState(false);
+    const [menuEditIsOpen, setMenuEditIsOpen] = useState(false);
+    const [isEditValorAulaAtivo, setIsEditValorAulaAtivo] = useState(false);
+    const [valorAulaString, setValorAulaString] = useState(() => {
+        const valor = localStorage.getItem('VALOR_AULA') || formatarValorAula("3000")
+        return valor
+    })
+    const [valorAulaNumber, setValorAulaNumber] = useState(() => {
+        const valorAulaNumberString = valorAulaString.replace(/\D/g,"").trim()
+        const valorSerSalvo = Number(valorAulaNumberString) / 100
+        console.log("Valor ser salvo no valorAulaNumber => ")
+        console.log(valorSerSalvo)
+        return valorSerSalvo
+    })
+    
+    const totalMarcado = useRef(0);
     const timerMostrarChekAnimacao = useRef(null);
     const timerEsconderChekAnimacao = useRef(null);
     const timerAnimacaoBotaoChek = useRef(null);
@@ -61,7 +75,9 @@ function MesAtual() {
         return acc + (dia.marcado ? 1 : 0);
         }, 0)
 
-        setValorTotal(totalMarcado.current * 30)
+        console.log("Aula number somando 10 => " + valorAulaNumber + 10)
+        console.log("Quant total marcado => " + totalMarcado.current)
+        setValorTotal(totalMarcado.current * valorAulaNumber)
 
         if(totalMarcado.current === objetoMesAtual.arrayDias.length && !totalToLeft && !showAnimationCaixaCheck) {
             setTotalToLeft(true)
@@ -89,8 +105,21 @@ function MesAtual() {
     },[arrayDiasAlterar]);
 
     useEffect(() => {
-        localStorage.setItem('_ATUALIZACAO_', atualizacao);
-    }, [atualizacao]);
+        console.log("Valor que está sendo inserido no valor aula do local storage => " + valorAulaString)
+        localStorage.setItem('VALOR_AULA', valorAulaString);
+        //atualizar no mes atual
+        const novoObjeMesAtual = {...objetoMesAtual, arrayDias: objetoMesAtual.arrayDias.map((dia) => (
+            {...dia, valor: valorAulaNumber}
+        ))}
+        //atualizar no array full dias
+        const novoArrayFullDias = arrayDiasAlterar.map((dia) => (
+            {...dia, valor: valorAulaNumber}
+        ))
+
+        setObjetoMesAtual(novoObjeMesAtual)
+        setArrayDiasAlterar(novoArrayFullDias)
+
+    }, [valorAulaNumber])
 
     useLayoutEffect(() => {
         if(!botOpenModal) return;
@@ -102,14 +131,17 @@ function MesAtual() {
         const indexElemento = arrayDiasAlterar.findIndex((dia) => dia.id === idDiaSerTrocado.current);
         
         //centralizando o dia clicado para deixar visivel no calendario
+        // A partir do index 8 o elemento nao fica visivel
         if(indexElemento > 8) {
-            let linhas = 0;
+            let linhas = 0;//linhas para dar scroll
             for(let i = 1; i <= arrayDiasAlterar.length; i++) {
-                if(i % 3 === 0) linhas++;
+                if(i % 3 === 0) linhas++;//contando linhas pulando de 3 em 3 elementos, onda linha tem exatos 3 elementos
                 
-                if(i >= indexElemento) break;
+                if(i >= indexElemento) break;//se encontrar o index do elemento para a contagem de linhas
             }
-            elemento.scrollTop = 109.5 + (97*(linhas-1));
+            const valorMoverPrimeiraLinha = 109.5;//tem valor maior por causa do padding da caixa pai
+            const valorMoverLinha = 97;//valor para mover qualquer linha que nao seja a primeira
+            elemento.scrollTop = valorMoverPrimeiraLinha + (valorMoverLinha*(linhas-1));
         }
     }, [botOpenModal]);
 
@@ -136,9 +168,8 @@ function MesAtual() {
     }
 
     function fecharMes() {
-        const objMesAtual = {id: gerarIdKey(), arrayDias: objetoMesAtual.arrayDias, ano: objetoMesAtual.ano, mes: objetoMesAtual.mes, quantAula: totalMarcado.current, valorTotal: valorTotal};
-        const mesAtual = objetoMesAtual.mes;
-        const anoAtual = objetoMesAtual.ano;
+        const objMesAtual = {id: gerarIdKey(), arrayDias: objetoMesAtual.arrayDias, ano: objetoMesAtual.ano, mes: objetoMesAtual.mes, quantAula: totalMarcado.current, valorTotal: valorTotal, arrayMes: arrayDiasAlterar};
+
         const obj = localStorage.getItem('objMes')
         if(obj) {
             console.log('O OBJETO É VERDADEIRO, VAI MODIFICAR O QUE EXISTE')
@@ -337,23 +368,72 @@ function MesAtual() {
         objDiaSerDeletado.current = null;
     }
 
-    function atualizar() {
-        //chamar funcao gerarArrayTodosOsDiasMesAtualAndObjMesAtual
-        //fazer uma funcao igual mas com valor para ser passado
-        //passar o objMesAtual para a funcao
-        //crio o array de todos os dias pegando o mes e o ano do objeto
-        //crio o array dias do mes atual verificando o array atual do objMesAtual e copio o valor marcado para ficar igual ao valores anteriores do usuario.
-        const novoObjMesAtualEArrFullDias = gerarArrayTodosOsDiasMesAtualAndObjMesAtualParaAtualizacao(objetoMesAtual);
+    function toggleMenu() {
+        if(menuFilesIsOpen)
+            fecharMenuFiles()
+        if(menuEditIsOpen)
+            fecharMenuEdit()
+        if(isEditValorAulaAtivo)
+            fecharEditValorAula()
 
-        //Receber dessa funcao um objeto com o objeto do mes atual e o array do full dias
-        //separa esses valores em variaveis para melhor legibilidade
-        //setar estado do objeto mes atual, array full dias e da atualizacao
-        const novoObjetoMesAtual = novoObjMesAtualEArrFullDias.objMesAtual;
-        const novoArraFullDias = novoObjMesAtualEArrFullDias.arrayFullMes;
+        setIsMenuAtivo((prev) => !prev)
+        
+    }
 
-        setObjetoMesAtual(novoObjetoMesAtual);
-        setArrayDiasAlterar(novoArraFullDias);
-        setAtualizacao(false);
+    function abrirMenuFiles() {
+        setMenuFilesIsOpen(true)
+    }
+
+    function fecharMenuFiles() {
+        setMenuFilesIsOpen(false)
+    }
+
+    function abrirMenuEdit() {
+        setMenuEditIsOpen(true)
+    }
+
+    function fecharMenuEdit() {
+        setMenuEditIsOpen(false)
+    }
+
+    function abrirEditValorAula() {
+        setIsEditValorAulaAtivo(true)
+    }
+
+    function fecharEditValorAula() {
+        setIsEditValorAulaAtivo(false)
+    }
+
+    const handleChange = (e) => {
+        let valorDigitado = e.target.value
+
+        valorDigitado = valorDigitado.replace(/\D/g,"")
+
+        if(valorDigitado === "") {
+            setValor("")
+            return
+        }
+
+        setValorAulaString(formatarValorAula(valorDigitado))
+    }
+
+    function formatarValorAula(valor) {
+        const valorNumerico = Number(valor) / 100
+
+        const valorFormatado = new Intl.NumberFormat('pt-BR', {
+            style: 'currency',
+            currency: 'BRL',
+        }).format(valorNumerico)
+
+        return valorFormatado
+    }
+
+    function salvarValorAulaNumber() {
+        console.log("Valor a ser salvo no valor aula number")
+        const valorPuro = valorAulaString.replace(/\D/g,"")
+        setValorAulaNumber(Number(valorPuro) / 100)
+        //isMenuAtivo, isEditValorAulaAtivo, menuEditIsOpen
+        toggleMenu()
     }
 
     return(
@@ -361,12 +441,129 @@ function MesAtual() {
             <div className='conteudo'>
                 <div className={totalToLeft ? 'set-borda calendar' : 'calendar'}>
                     <div className='titulo'>
-                        <div>
+                        <div className='header-title'>
                             <h1>{titulo}</h1>
                             <p className='data-titulo'>{diaAtualTitulo}</p>
                         </div>
                         
-                        <button className='bot-edit' onClick={toggleEdicao}>{botAcionarEdicao ? "✓" : "Edit"}</button>
+                        <div className='options-menu'>
+                            
+                               <ButtonAnimate
+                                    isOpen={isMenuAtivo}
+                                    onToggle={toggleMenu}
+                                    isEdicaoAcionada={botAcionarEdicao}
+                                ></ButtonAnimate>
+                                
+                                {isMenuAtivo && !botAcionarEdicao ?
+                                    <div className={`menu ${isEditValorAulaAtivo ? 'menu-expandido-edit-valor-aula' : menuFilesIsOpen || menuEditIsOpen ? 'menu-expandido' : 'menu-edit'}`}> 
+                                                    <MenuEditModal>
+                                                        {menuFilesIsOpen ?
+                                                            <div className='op-menu-expandido'>    
+                                                                <div className='header-menu'>
+                                                                    <button 
+                                                                    className='bot-voltar'
+                                                                    onClick={fecharMenuFiles}>
+                                                                        <div className='seta'></div>
+                                                                    </button>
+                                                                    <span>JSON files</span>
+                                                                </div>
+                                                                <div className='options-menu-expandido'>
+                                                                    <div
+                                                                    className='option-com-icon'
+                                                                    >
+                                                                        <span>Inserir</span> 
+                                                                        <img className='icon-import' src={importar}/>
+                                                                    </div>
+                                                                    <div
+                                                                    className='option-com-icon'
+                                                                    >
+                                                                        <span>Exportar</span> 
+                                                                        <img className='icon-export' src={exportar}/>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        : menuEditIsOpen ?
+
+                                                            isEditValorAulaAtivo ? 
+                                                                <div className='op-menu-edit-valor-aula'>
+                                                                    <div className='header-menu'>
+                                                                        <button 
+                                                                        className='bot-voltar'
+                                                                        onClick={fecharEditValorAula}
+                                                                        >
+                                                                            <div className='seta'></div>
+                                                                        </button>
+                                                                        <span>Editar Valor Aula</span>
+                                                                    </div>
+                                                                    <div className='campo-valor'>
+                                                                        
+                                                                        <InputDinheiro 
+                                                                        valorAula={valorAulaString}
+                                                                        handleChange={handleChange}/>
+                                                                        <button
+                                                                        className='bot-salvar-valor-aula'
+                                                                        onClick={salvarValorAulaNumber}
+                                                                        >
+                                                                            Salvar
+                                                                        </button>
+                                                                    </div>
+                                                                    
+
+                                                                </div>
+                                                            :
+
+                                                            <div className='op-menu-expandido'>    
+                                                                <div className='header-menu'>
+                                                                    <button 
+                                                                    className='bot-voltar'
+                                                                    onClick={fecharMenuEdit}
+                                                                    >
+                                                                        <div className='seta'></div>
+                                                                    </button>
+                                                                    <span>Editar</span>
+                                                                </div>
+                                                                <div className='options-menu-expandido'>
+                                                                    <div
+                                                                    onClick={toggleEdicao}
+                                                                    >Dias</div>
+                                                                    <div
+                                                                    onClick={abrirEditValorAula}
+                                                                    >Valor aula</div>
+                                                                </div>
+                                                            </div>
+                                                        
+                                                        :
+
+                                                        <div className='op-menu-normal'>
+                                                            <span
+                                                            onClick={abrirMenuEdit}
+                                                            >
+                                                                Edit
+                                                            </span>
+                                                            <span
+                                                            onClick={abrirMenuFiles}
+                                                            >File</span>
+                                                        </div>
+                                                        }
+                                                    </MenuEditModal>
+                                    </div>
+                                    
+                                :
+
+                                undefined
+                                }
+                                
+
+                            {botAcionarEdicao &&  <button 
+                                    className='bot-edit' 
+                                    onClick={toggleEdicao}
+                                >
+                                    ✓
+                                </button>}
+                            
+                            
+                        </div>
                     </div>
                     {listaUl}
                 </div>
@@ -385,69 +582,19 @@ function MesAtual() {
                 </div>
                 
             </div>
-            {atualizacao === true ? 
-                <Modal isOpen={true}>
-                    <div className='janela-modal janela-modal-para-fechar-mes'>
-                        <div className="text">
-                            <h2>Uma atualização importante está disponível !</h2>
-                            <p>A atualização é crucial para manter o funcionamento correto do app.</p>
-                        </div>
-                        <div className="option-atualizar">
-                            <button onClick={atualizar} className="bot-modal">
-                                Atualizar
-                            </button>
-                        </div>
-                    </div>
-                </Modal>
-            :
                 <Modal isOpen={botOpenModal}>
-                {/* Verificar o acionar edicao e bot delete clicado juntos para mostrar modal para deletar dia */}
-                {botAcionarEdicao && botOpenDeleteDiaModal ?
-                    <div 
-                    className='janela-modal janela-modal-para-deletar-dia'
-                    data-id={objDiaSerDeletado.current.id}
-                    >
-                        <div className="text">
-                            <h2>Deseja deletar o dia "{objDiaSerDeletado.current.dataFormatada}" ?</h2>
-                            <p>Ao clicar em confirmar a ação não poderá ser desfeita.</p>
-                        </div>
-                        <div className="options">
-                            <button onClick={toggleModalDeletarDia} className="bot-modal">Cancel</button>
-                            <button onClick={deletarDia} className="bot-modal fechar">Confirmar</button>
-                        </div>
-                    </div>
-                : botAcionarEdicao ?
-                    <div className='janela-modal janela-modal-para-alterar-dia'>
-                        <div className="header-alterar-dia">
-                            <h2>Alterar dia</h2>
-                            <div 
-                            className='calendar-container' 
-                            onClick={handlerEscolhaDiaAlterar}
-                            ref={boxRef}
-                            >
-                                {listaDiasParaAlterar}
-                            </div> 
-                        </div>
-                        <div className="options">
-                            <button onClick={fecharModalAndResetarUltimodIdDoDiaEscolhido} className="bot-modal">Cancel</button>
-                            <button onClick={salvarAlteracaoDiaAndResetarIdDoDiaParaAlterar} className="bot-modal fechar">Salvar</button>
-                        </div>
-                    </div>
-                :
-                    <div className='janela-modal janela-modal-para-fechar-mes'>
-                        <div className="text">
-                            <h2>Deseja fechar esse mês ?</h2>
-                            <p>Ao fechar o mês, será gerado uma nova lista com as aulas do mês seguinte.</p>
-                        </div>
-                        <div className="options">
-                            <button onClick={toggleModal} className="bot-modal">Cancel</button>
-                            <button onClick={fecharMes} className="bot-modal fechar">Fechar</button>
-                        </div>
-                    </div>
+                {botAcionarEdicao && botOpenDeleteDiaModal ? 
+                    <DeleteModalConteudo objDiaSerDeletado={objDiaSerDeletado} onToggleModalDeletarDia={toggleModalDeletarDia} onDeletarDia={deletarDia}/>
+
+                    : botAcionarEdicao ?
+
+                    <EditModal onHandlerEscolhaDiaAlterar={handlerEscolhaDiaAlterar} boxRef={boxRef} listaDiasParaAlterar={listaDiasParaAlterar} onFecharModalAndResetarUltimodIdDoDiaEscolhido={fecharModalAndResetarUltimodIdDoDiaEscolhido} onSalvarAlteracaoDiaAndResetarIdDoDiaParaAlterar={salvarAlteracaoDiaAndResetarIdDoDiaParaAlterar}/>
+
+                    :
+
+                    <FecharMesModal onToggleModal={toggleModal} onFecharMes={fecharMes}/>
                 }
                 </Modal>
-            }
-            
         </>
     )
 }

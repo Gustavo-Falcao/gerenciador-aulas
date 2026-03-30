@@ -1,7 +1,7 @@
 :root{
   --bg:#F6F7F9; --card:#fff; --border:#E6E8EC;
   --text:#1D2433; --muted:#5E6470; --accent:#22C55E;
-  --chip-open-bg:#EEF7F1; --chip-open-t:#187A3D;
+  --chip-open-bg:#eef7f1; --chip-open-t:#187A3D;
   --chip-adjust-bg:#FFF4E5; --chip-adjust-t:#8A5300;
   --radius-lg:12px; --shadow:0 4px 12px rgba(0,0,0,.10);
 }
@@ -19,11 +19,11 @@
     padding-bottom:12px;
     position: fixed;
     z-index: 300;
-    top: 0;
+    top: 0px;
     left: 0;
     backdrop-filter: blur(5px);
     width: 100%;
-    padding: 10px 10px 20px 10px;
+    padding: 20px 10px 20px 10px;
 }
 .title{
     font-weight:600; 
@@ -40,7 +40,7 @@
   border:1px solid var(--border); 
   border-radius:10px;
   padding:10px 12px; 
-  font-size:15px; 
+  font-size:16px; 
   color:var(--text);
   max-width: 250px;
 }
@@ -150,7 +150,7 @@ summary::-webkit-details-marker{
 .bot-sair {
   position: fixed;
   left: 310px;
-  top: 199px;
+  top: 160px;
   display: inline-flex;
   justify-content: center;
   align-items: center;
@@ -167,7 +167,7 @@ summary::-webkit-details-marker{
   transform: translate(-50%, -55%);
   max-height: 314px;
   overflow-y: auto;
-  padding: 30px 30px 10px 30px;
+  padding: 30px;
 }
 
 .list-aula {
@@ -184,4 +184,59 @@ summary::-webkit-details-marker{
   margin-bottom: 15px;
   border-radius: 20px;
   font-weight: 500;
+}
+
+.calendar-header {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.calendar-header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #1f2937;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  justify-items: center;
+}
+
+.weekday {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #727882;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.day {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 50%;
+  color: #1f2937;
+  position: relative;
+}
+
+.empty-day {
+  visibility: hidden;
+}
+
+.is-done {
+  /* background-color: #3b82f6;  */
+   background-color: #22c55e41; 
+  color: var(--chip-open-t);
+  font-weight: 700;
+  /* box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.4); Sombra suave na cor primária */
+  transform: scale(1.05); 
 }

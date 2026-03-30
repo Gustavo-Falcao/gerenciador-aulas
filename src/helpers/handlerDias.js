@@ -108,6 +108,54 @@ export function gerarArrayTodosOsDiasMesAtualAndObjMesAtual() {
 
 }
 
+export function gerarArrayMesAtualizacao(objMes) {
+    //gerarArrayMes para o mes
+    //verificar se o dataFormatada do arrayDias e igual ao do arrayMes, se sim marcar o invalido como true
+
+    const novoObjMes = objMes.map((mes) => (
+        {...mes, arrayMes: gerarArrayMes(mes.mes, mes.ano, mes.arrayDias)}
+    ))
+
+    return novoObjMes;
+}
+
+function gerarArrayMes(mes, ano, arrayDias) {
+    const ultimaDataMes = new Date(ano, mes+1, 0)
+    const ultimoDia = ultimaDataMes.getDate()
+
+    let arrayMes = []
+
+    for(let dia = 1; dia <= ultimoDia; dia++) {
+        const data = new Date(ano, mes, dia);
+        const objetoDiaAula = isDiaAulaFeita(formatarData(data), arrayDias)
+        if(objetoDiaAula) {
+           arrayMes.push({
+            id: objetoDiaAula.id,
+            dataFormatada: objetoDiaAula.dataFormatada,
+            dataNumerosString: formatarDataNumeros(data), 
+            nomeDiaSemana: gerarDiaSemanaAlterarDia(data.getDay()),
+            invalido: true,
+            marcado: false
+        }) 
+        } else {
+            arrayMes.push({
+                id: gerarIdKey(),
+                dataFormatada: formatarData(data),
+                dataNumerosString: formatarDataNumeros(data), 
+                nomeDiaSemana: gerarDiaSemanaAlterarDia(data.getDay()),
+                invalido: false, 
+                marcado: false
+            })
+        }
+    }
+
+    return arrayMes
+}
+
+function isDiaAulaFeita(dataFormatada, arrayDias) {
+    return arrayDias.find((dia) => dia.dataFormatada === dataFormatada);
+}
+
 function gerarArrayTodosOsDiasMesAtualParaAtualizacao(objMesAtual) {
     const mesAtual = objMesAtual.mes
     const anoAtual = objMesAtual.ano

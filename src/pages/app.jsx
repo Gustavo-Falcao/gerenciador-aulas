@@ -3,9 +3,10 @@ import MesAtual from "./mesAtual";
 import Meses from "./meses";
 import Modal from "../components/modal";
 import '../styles/global.css';
+import { gerarArrayMesAtualizacao } from "../helpers/handlerDias";
 
 const NAV_KEY = 'nave-page';
-const LATEST_VERSION = 'v1.4.1';
+const LATEST_VERSION = 'v2.6.1';
 
 const STYLES_HOME = {
     
@@ -86,6 +87,10 @@ function App() {
         console.log("Atualizei");
         //pegar objMes localStorage
         //para cada mes gerar um arrayMes
+        const objMes = localStorage.getItem('objMes');
+        const novoObjMes = gerarArrayMesAtualizacao(JSON.parse(objMes))
+
+        localStorage.setItem('objMes', JSON.stringify(novoObjMes))
         setarUserVersionLocalStorage(LATEST_VERSION);
         setUserVersion(LATEST_VERSION);
         setAtualizacao(false);

@@ -1,8 +1,9 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { gerarTitulo } from '../helpers/handlerDias.js';
 import { formatarDinheiro } from '../helpers/handlerCurrency.js';
 import Modal from '../components/modal.jsx';
-import cruzIcon from '../assets/cruz.svg'
+import DeleteModalConteudo from '../components/deleteModal.jsx';
+import cruzIcon from '../assets/cruz.svg';
 import '../styles/meses.css';
 function Meses() {
 
@@ -11,7 +12,7 @@ function Meses() {
         if(objeto) {
             return JSON.parse(objeto)
         }
-        return null
+        return []
     })
 
     const anos = [
@@ -25,17 +26,20 @@ function Meses() {
     const [buscaMes, setBuscaMes] = useState("");
     const [botModal, setBotModal] = useState(false);
     const [arrayDiasCalendario, setArrayDiasCalendario] = useState([]);
+    const [isDeletarMesAtivo, setIsDeletarMesAtivo] = useState(false)
 
     const keyTimeOutBusca = useRef(null)
     const tituloCalendario = useRef('')
     const primeiroDiaSemana = useRef('')
+    const objMesSerDeletado = useRef({id: null, nome: null})
+
+    useEffect(() => {
+        console.log("O array mes será atualizado no local storage")
+        console.log(meses)
+        localStorage.setItem('objMes' ,JSON.stringify(meses))
+    },[meses])
 
     function abrirModal(mes) {
-        // pegar o mes inteiro do mes atual
-        // deixar como marcado os meses que tiveram aula
-        // pegar o dia da semana do primeiro dia do mes
-        // verificar quantos dias tem do primeiro dia do mes até o domingo para setar os dias vazios
-
         tituloCalendario.current = gerarTitulo(mes.mes, mes.ano)
         primeiroDiaSemana.current = mes.arrayMes[0].nomeDiaSemana
         setArrayDiasCalendario(mes.arrayMes)
@@ -43,14 +47,16 @@ function Meses() {
     }
 
     function gerarMes(valor) {
-        const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+        const mesesOptions = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
 
-        return meses[valor];
+        return mesesOptions[valor];
     }
 
     const mesesFiltrados = useMemo(() => {
-        if(!meses) {
-            return
+        console.log("Array meses abaixo dentro do useMemo")
+        console.log(meses)
+        if(!meses || meses.length === 0) {
+            return []
         }
         const filtradoMes = meses.filter(m => gerarMes(m.mes).toLocaleLowerCase().includes(buscaMes.toLocaleLowerCase()));
 
@@ -63,7 +69,7 @@ function Meses() {
 
         console.log(`Ano escolhido => ${ano}`);
         return filtradoMes;
-    },[ano, buscaMes]);
+    },[ano, buscaMes, meses]);
 
     function handlerBuscaMes(e) {
         const currentValue = e.currentTarget.value;
@@ -118,6 +124,28 @@ function Meses() {
         return <div key={dia.id} className={dia.invalido ? 'day is-done' : 'day'}>{diaSemZero}</div>
     }
 
+    function ativarDeleteMes(mes) {
+        objMesSerDeletado.current.id = mes.id
+        objMesSerDeletado.current.nome = gerarTitulo(mes.mes, mes.ano)
+        setBotModal(true)
+        setIsDeletarMesAtivo(true)
+    }
+
+    function desativarDeleteMes() {
+        // objMesSerDeletado.current.id = null
+        // objMesSerDeletado.current.nome = null
+        setIsDeletarMesAtivo(false)
+        setBotModal(false)
+    }
+
+    function deletarMes() {
+        console.log("Nome do mes que será deletado => " + objMesSerDeletado.current.nome)
+        console.log("Id do mes que está sendo deletado => " + objMesSerDeletado.current.id)
+        const idParaDeletar = objMesSerDeletado.current.id
+        setMeses(prev => prev.filter((mes) => mes.id !== idParaDeletar))
+        desativarDeleteMes()
+    }
+
     return (
         <>
             <div className="container">
@@ -142,7 +170,7 @@ function Meses() {
                     <div className="progress" aria-hidden="true"><span></span></div>
                 </section> */}
                 <section className='grid' id='grid'>
-                    {meses === null ? <p>Nenhum mes ainda...</p> 
+                    {meses.length === 0 ? <p>Nenhum mes ainda...</p> 
                     : 
                     mesesFiltrados.length === 0 ? <p>Nenhum mes encontrado...</p> 
                     :
@@ -157,10 +185,18 @@ function Meses() {
                             <div>
                                 {mes.quantAula} aulas • {formatarDinheiro(mes.valorTotal)}
                             </div>
+                            <hr className='divider'/>
                             <div className='actions'>
-                                <details>
-                                    <summary className='btn' onClick={() => abrirModal(mes)}>Ver detalhes</summary>
-                                </details>
+                                <button 
+                                className='btn btn-details' 
+                                onClick={() => abrirModal(mes)}
+                                >
+                                    Ver detalhes</button>  
+                                <button 
+                                className='btn btn-delete'
+                                onClick={() => ativarDeleteMes(mes)}
+                                >
+                                    Deletar</button>
                             </div>
                         </article>
                     ))}
@@ -168,87 +204,62 @@ function Meses() {
 
             </div>
             <Modal isOpen={botModal}>
-                <span className='bot-sair' onClick={() => setBotModal(false)}> 
-                    <img src={cruzIcon} className='icon' alt="Cruz icon" />
-                    </span>
-                <div className='janela-modal janela-modal-para-mostrar-meses'>
-                    {/* <ul className='list-aula'>
-                        {listaForModal.current.map((aula) => (
-                            <li key={aula.id}>{aula.dataFormatada}</li>
-                        ))}
-                    </ul> */}
-                    <div class="calendar-header">
-                        <h2>{tituloCalendario.current}</h2>
-                    </div>
 
-                        <div class="calendar-grid">
-                            <div class="weekday">D</div>
-                            <div class="weekday">S</div>
-                            <div class="weekday">T</div>
-                            <div class="weekday">Q</div>
-                            <div class="weekday">Q</div>
-                            <div class="weekday">S</div>
-                            <div class="weekday">S</div>
-
-                            {Array.from(
-                                {length: quantidadeDiasVazio(primeiroDiaSemana.current)},
-                                (_, index) => <div key={`empty-${index}`} className='day empty-day'></div>
-                            )}
-
-                            {arrayDiasCalendario.map((dia) => 
-                                gerarDiaCalendario(dia)   
-                            )}
-
+                {isDeletarMesAtivo ? 
+                
+                    <DeleteModalConteudo objSerDeletado={objMesSerDeletado.current.id}>
+                        <div className="text">
+                            <h2>Deseja deletar o mês "{objMesSerDeletado.current.nome}" ?</h2>
+                            <p>Ao clicar em confirmar a ação não poderá ser desfeita.</p>
                         </div>
-                    {/* <div class="calendar-grid">
-                        <div class="weekday">D</div>
-                        <div class="weekday">S</div>
-                        <div class="weekday">T</div>
-                        <div class="weekday">Q</div>
-                        <div class="weekday">Q</div>
-                        <div class="weekday">S</div>
-                        <div class="weekday">S</div>
+                        <div className="options">
+                            <button 
+                            onClick={desativarDeleteMes} className="bot-modal"
+                            >
+                                Cancel
+                            </button>
+                            <button 
+                            onClick={deletarMes}
+                            className="bot-modal fechar"
+                            >
+                                Confirmar
+                            </button>
+                        </div>
+                    </DeleteModalConteudo>
 
-                        <div class="day empty-day"></div>
-                        <div class="day empty-day"></div>
-                        <div class="day empty-day"></div>
-                        <div class="day empty-day"></div>
+                    :
 
-                        <div class="day">1</div>
-                        <div class="day">2</div>
-                        <div class="day">3</div>
-                        <div class="day">4</div>
-                        <div class="day">5</div>
-                        
-                        <div class="day is-done">6</div> 
-                        
-                        <div class="day">7</div>
-                        <div class="day">8</div>
-                        <div class="day">9</div>
-                        <div class="day">10</div>
-                        <div class="day">11</div>
-                        <div class="day">12</div>
-                        <div class="day">13</div>
-                        <div class="day">14</div>
-                        <div class="day">15</div>
-                        <div class="day">16</div>
-                        <div class="day">17</div>
-                        <div class="day">18</div>
-                        <div class="day">19</div>
-                        <div class="day">20</div>
-                        <div class="day">21</div>
-                        <div class="day">22</div>
-                        <div class="day">23</div>
-                        <div class="day">24</div>
-                        <div class="day">25</div>
-                        <div class="day">26</div>
-                        <div class="day">27</div>
-                        <div class="day">28</div>
-                        <div class="day">29</div>
-                        <div class="day">30</div>
-                        <div class="day">31</div>
-                    </div> */}
+                <div>
+                    <span className='bot-sair' onClick={() => setBotModal(false)}> 
+                        <img src={cruzIcon} className='icon' alt="Cruz icon" />
+                        </span>
+                    <div className='janela-modal janela-modal-para-mostrar-meses'>
+                        <div className="calendar-header">
+                            <h2>{tituloCalendario.current}</h2>
+                        </div>
+                            <div className="calendar-grid">
+                                <div className="weekday">D</div>
+                                <div className="weekday">S</div>
+                                <div className="weekday">T</div>
+                                <div className="weekday">Q</div>
+                                <div className="weekday">Q</div>
+                                <div className="weekday">S</div>
+                                <div className="weekday">S</div>
+
+                                {Array.from(
+                                    {length: quantidadeDiasVazio(primeiroDiaSemana.current)},
+                                    (_, index) => <div key={`empty-${index}`} className='day empty-day'></div>
+                                )}
+
+                                {arrayDiasCalendario.map((dia) => 
+                                    gerarDiaCalendario(dia)   
+                                )}
+
+                            </div>
+                    </div>
                 </div>
+                
+                }
             </Modal>
         </>
     )

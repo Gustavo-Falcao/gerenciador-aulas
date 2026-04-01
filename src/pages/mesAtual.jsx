@@ -584,7 +584,16 @@ function MesAtual() {
             </div>
                 <Modal isOpen={botOpenModal}>
                 {botAcionarEdicao && botOpenDeleteDiaModal ? 
-                    <DeleteModalConteudo objDiaSerDeletado={objDiaSerDeletado} onToggleModalDeletarDia={toggleModalDeletarDia} onDeletarDia={deletarDia}/>
+                    <DeleteModalConteudo idObjSerDeletado={objDiaSerDeletado.current.id}>
+                        <div className="text">
+                            <h2>Deseja deletar o dia "{objDiaSerDeletado.current.dataFormatada}" ?</h2>
+                            <p>Ao clicar em confirmar a ação não poderá ser desfeita.</p>
+                        </div>
+                        <div className="options">
+                            <button onClick={toggleModalDeletarDia} className="bot-modal">Cancel</button>
+                            <button onClick={deletarDia} className="bot-modal fechar">Confirmar</button>
+                        </div>
+                    </DeleteModalConteudo>
 
                     : botAcionarEdicao ?
 

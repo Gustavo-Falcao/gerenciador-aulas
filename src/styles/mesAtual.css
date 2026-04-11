@@ -504,7 +504,7 @@ button:active {
 
 .menu-edit {
     top: 40px;
-    left: -30px;
+    left: -70px;
 }
 
 .op-menu span {
@@ -513,14 +513,11 @@ button:active {
     letter-spacing: 0.3px;
     text-align: center;
     font-size: 18px;
-    width: 100%;
+    min-width: 50px;
+    min-height: 30px;
     margin: 5px 0px;
-}
 
-/* .op-menu span:nth-child(1) {
-    padding-bottom: 15px;
-    border-bottom: 1px solid rgb(255, 255, 255);
-} */
+}
 
 .op-menu-expandido {
     /* 191 - 153*/
@@ -548,7 +545,15 @@ button:active {
 }
 
 .op-menu-normal {
-    padding: 20px 20px;
+    padding: 10px 10px;
+}
+
+.op-menu-normal span {
+    padding: 10px 20px;
+}
+
+.span-edit {
+    border-bottom: 1px solid rgb(191, 191, 191)
 }
 
 .options-menu {

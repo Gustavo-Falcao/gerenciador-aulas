@@ -537,13 +537,16 @@ function MesAtual() {
 
                                                         <div className='op-menu-normal'>
                                                             <span
+                                                            className='span-edit'
                                                             onClick={abrirMenuEdit}
                                                             >
-                                                                Edit
+                                                                Edit ✏️
                                                             </span>
                                                             <span
                                                             onClick={abrirMenuFiles}
-                                                            >File</span>
+                                                            >
+                                                                File 📂
+                                                            </span>
                                                         </div>
                                                         }
                                                     </MenuEditModal>

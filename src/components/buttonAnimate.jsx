@@ -5,7 +5,7 @@ function ButtonAnimate({isOpen, onToggle, isEdicaoAcionada}) {
             <button
                 type="button"
                 onClick={onToggle}
-                className={`burguer ${isOpen ? "is-open" : ""}`}
+                className={`header-menu ${isOpen ? "is-open" : ""}`}
             >
                 <span></span>
                 <span></span>

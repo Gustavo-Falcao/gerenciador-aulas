@@ -25,13 +25,11 @@ function MesAtual() {
     }) 
     console.log(objetoMesAtual)
     const [botOpenModal, setBotOpenModal] = useState(false)
-    const [botCheckAnimation, setbotCheckAnimation] = useState(false)
     const [botOpenDeleteDiaModal, setBotOpenDeleteDiaModal] = useState(false);
-    const [totalToLeft, setTotalToLeft] = useState(false)
-    const [showAnimationCaixaCheck, setshowAnimationCaixaCheck] = useState(false)
     const [valorTotal, setValorTotal] = useState(0);
     const [botAcionarEdicao, setBotAcionarEdicao] = useState(false)
     const [isMenuAtivo, setIsMenuAtivo] = useState(false)
+    const [isTodasAulasMarcadas, setIsTodasAulasMarcadas] = useState(false)
     const titulo = gerarTitulo(objetoMesAtual.mes, objetoMesAtual.ano);
     const [arrayDiasAlterar, setArrayDiasAlterar] = useState(() => {
         const arrayFullDias = localStorage.getItem('ARR_FULL_DIAS');
@@ -56,9 +54,6 @@ function MesAtual() {
     })
     
     const totalMarcado = useRef(0);
-    const timerMostrarChekAnimacao = useRef(null);
-    const timerEsconderChekAnimacao = useRef(null);
-    const timerAnimacaoBotaoChek = useRef(null);
     const objUltimoDiaEscolhido = useRef({id: null, invalido: null});
     const idDiaSerTrocado = useRef(null);
     const objDiaSerDeletado = useRef({id: null, dataFormatada: null});
@@ -75,29 +70,17 @@ function MesAtual() {
         return acc + (dia.marcado ? 1 : 0);
         }, 0)
 
+        if(totalMarcado.current === objetoMesAtual.arrayDias.length) {
+            setIsTodasAulasMarcadas(true)
+        }
+        else if(isTodasAulasMarcadas) {
+            setIsTodasAulasMarcadas(false)
+        }
+
         console.log("Aula number somando 10 => " + valorAulaNumber + 10)
         console.log("Quant total marcado => " + totalMarcado.current)
         setValorTotal(totalMarcado.current * valorAulaNumber)
 
-        if(totalMarcado.current === objetoMesAtual.arrayDias.length && !totalToLeft && !showAnimationCaixaCheck) {
-            setTotalToLeft(true)
-            if(timerMostrarChekAnimacao.current) 
-                clearTimeout(timerMostrarChekAnimacao.current);
-
-            timerMostrarChekAnimacao.current = setTimeout(() => {
-                setshowAnimationCaixaCheck(true)
-            }, 1000)
-        }else {
-            if(totalToLeft && showAnimationCaixaCheck) {
-                if(timerEsconderChekAnimacao.current)
-                    clearTimeout(timerEsconderChekAnimacao);
-
-                timerEsconderChekAnimacao.current = setTimeout(() => {
-                    setTotalToLeft(false)
-                }, 1000)
-                setshowAnimationCaixaCheck(false)
-            }
-        }
     },[objetoMesAtual])
     
     useEffect(() => {
@@ -149,18 +132,9 @@ function MesAtual() {
         setObjetoMesAtual(prev => ({...prev, arrayDias: prev.arrayDias.map((item) => item.id === id ? {...item, marcado: !item.marcado} : item)}));
     }
 
-    function toggleModal() {
-        if(!botOpenModal) {
-            if(timerAnimacaoBotaoChek.current)
-                clearTimeout(timerAnimacaoBotaoChek.current);
-            timerAnimacaoBotaoChek.current = setTimeout(() => {
-                setBotOpenModal((prev) => !prev)
-            }, 800)
-            setbotCheckAnimation((prev) => !prev) 
-        } else {
-            setbotCheckAnimation((prev) => !prev) 
-            setBotOpenModal((prev) => !prev)
-        }
+    //apagar animacao
+    function toggleModal() { 
+        setBotOpenModal((prev) => !prev)
     }
 
     function toggleEdicao() {
@@ -253,8 +227,8 @@ function MesAtual() {
             
             <div className={botAcionarEdicao ? 'situ-dia' : 'situ-dia esconder-bot-remover-dia'}>
                 <small 
-                className={dia.marcado ? "ok" : "badge"}>
-                    {dia.marcado ? "Ok" : "Pendendte"}
+                className={`badge-status ${dia.marcado ? "ok" : "pendente"}`}>
+                    {dia.marcado ? "Ok" : "Pendente"}
                 </small>
                 <button
                 className='remove-dia'
@@ -438,152 +412,154 @@ function MesAtual() {
 
     return(
         <>
-            <div className='conteudo'>
-                <div className={totalToLeft ? 'set-borda calendar' : 'calendar'}>
-                    <div className='titulo'>
-                        <div className='header-title'>
-                            <h1>{titulo}</h1>
-                            <p className='data-titulo'>{diaAtualTitulo}</p>
-                        </div>
-                        
-                        <div className='options-menu'>
+            <div className='mes-atual'>
+
+                <div className='conteudo'>
+                        <div className='titulo'>
+                            <div className='header-title'>
+                                <span className='title-dia'>{titulo}</span>
+                                <span className='header-badge'>{diaAtualTitulo}</span>
+                            </div>
                             
-                               <ButtonAnimate
-                                    isOpen={isMenuAtivo}
-                                    onToggle={toggleMenu}
-                                    isEdicaoAcionada={botAcionarEdicao}
-                                ></ButtonAnimate>
+                            <div className='options-menu'>
                                 
-                                {isMenuAtivo && !botAcionarEdicao ?
-                                    <div className={`menu ${isEditValorAulaAtivo ? 'menu-expandido-edit-valor-aula' : menuFilesIsOpen || menuEditIsOpen ? 'menu-expandido' : 'menu-edit'}`}> 
-                                                    <MenuEditModal>
-                                                        {menuFilesIsOpen ?
-                                                            <div className='op-menu-expandido'>    
-                                                                <div className='header-menu'>
-                                                                    <button 
-                                                                    className='bot-voltar'
-                                                                    onClick={fecharMenuFiles}>
-                                                                        <div className='seta'></div>
-                                                                    </button>
-                                                                    <span>JSON files</span>
-                                                                </div>
-                                                                <div className='options-menu-expandido'>
-                                                                    <div
-                                                                    className='option-com-icon'
-                                                                    >
-                                                                        <span>Inserir</span> 
-                                                                        <img className='icon-import' src={importar}/>
-                                                                    </div>
-                                                                    <div
-                                                                    className='option-com-icon'
-                                                                    >
-                                                                        <span>Exportar</span> 
-                                                                        <img className='icon-export' src={exportar}/>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                        : menuEditIsOpen ?
-
-                                                            isEditValorAulaAtivo ? 
-                                                                <div className='op-menu-edit-valor-aula'>
+                                <ButtonAnimate
+                                        isOpen={isMenuAtivo}
+                                        onToggle={toggleMenu}
+                                        isEdicaoAcionada={botAcionarEdicao}
+                                    ></ButtonAnimate>
+                                    
+                                    {isMenuAtivo && !botAcionarEdicao ?
+                                        <div className={`menu ${isEditValorAulaAtivo ? 'menu-expandido-edit-valor-aula' : menuFilesIsOpen || menuEditIsOpen ? 'menu-expandido' : 'menu-edit'}`}> 
+                                                        <MenuEditModal>
+                                                            {menuFilesIsOpen ?
+                                                                <div className='op-menu-expandido'>    
                                                                     <div className='header-menu'>
                                                                         <button 
                                                                         className='bot-voltar'
-                                                                        onClick={fecharEditValorAula}
+                                                                        onClick={fecharMenuFiles}>
+                                                                            <div className='seta'></div>
+                                                                        </button>
+                                                                        <span>JSON files</span>
+                                                                    </div>
+                                                                    <div className='options-menu-expandido'>
+                                                                        <div
+                                                                        className='option-com-icon'
+                                                                        >
+                                                                            <span>Inserir</span> 
+                                                                            <img className='icon-import' src={importar}/>
+                                                                        </div>
+                                                                        <div
+                                                                        className='option-com-icon'
+                                                                        >
+                                                                            <span>Exportar</span> 
+                                                                            <img className='icon-export' src={exportar}/>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                            : menuEditIsOpen ?
+
+                                                                isEditValorAulaAtivo ? 
+                                                                    <div className='op-menu-edit-valor-aula'>
+                                                                        <div className='header-menu'>
+                                                                            <button 
+                                                                            className='bot-voltar'
+                                                                            onClick={fecharEditValorAula}
+                                                                            >
+                                                                                <div className='seta'></div>
+                                                                            </button>
+                                                                            <span>Editar Valor Aula</span>
+                                                                        </div>
+                                                                        <div className='campo-valor'>
+                                                                            
+                                                                            <InputDinheiro 
+                                                                            valorAula={valorAulaString}
+                                                                            handleChange={handleChange}/>
+                                                                            <button
+                                                                            className='bot-salvar-valor-aula'
+                                                                            onClick={salvarValorAulaNumber}
+                                                                            >
+                                                                                Salvar
+                                                                            </button>
+                                                                        </div>
+                                                                        
+
+                                                                    </div>
+                                                                :
+
+                                                                <div className='op-menu-expandido'>    
+                                                                    <div className='header-menu'>
+                                                                        <button 
+                                                                        className='bot-voltar'
+                                                                        onClick={fecharMenuEdit}
                                                                         >
                                                                             <div className='seta'></div>
                                                                         </button>
-                                                                        <span>Editar Valor Aula</span>
+                                                                        <span>Editar</span>
                                                                     </div>
-                                                                    <div className='campo-valor'>
-                                                                        
-                                                                        <InputDinheiro 
-                                                                        valorAula={valorAulaString}
-                                                                        handleChange={handleChange}/>
-                                                                        <button
-                                                                        className='bot-salvar-valor-aula'
-                                                                        onClick={salvarValorAulaNumber}
-                                                                        >
-                                                                            Salvar
-                                                                        </button>
+                                                                    <div className='options-menu-expandido'>
+                                                                        <div
+                                                                        onClick={toggleEdicao}
+                                                                        >Dias</div>
+                                                                        <div
+                                                                        onClick={abrirEditValorAula}
+                                                                        >Valor aula</div>
                                                                     </div>
-                                                                    
-
                                                                 </div>
+                                                            
                                                             :
 
-                                                            <div className='op-menu-expandido'>    
-                                                                <div className='header-menu'>
-                                                                    <button 
-                                                                    className='bot-voltar'
-                                                                    onClick={fecharMenuEdit}
-                                                                    >
-                                                                        <div className='seta'></div>
-                                                                    </button>
-                                                                    <span>Editar</span>
-                                                                </div>
-                                                                <div className='options-menu-expandido'>
-                                                                    <div
-                                                                    onClick={toggleEdicao}
-                                                                    >Dias</div>
-                                                                    <div
-                                                                    onClick={abrirEditValorAula}
-                                                                    >Valor aula</div>
-                                                                </div>
+                                                            <div className='op-menu-normal'>
+                                                                <span
+                                                                className='span-edit'
+                                                                onClick={abrirMenuEdit}
+                                                                >
+                                                                    Edit ✏️
+                                                                </span>
+                                                                <span
+                                                                onClick={abrirMenuFiles}
+                                                                >
+                                                                    File 📂
+                                                                </span>
                                                             </div>
-                                                        
-                                                        :
+                                                            }
+                                                        </MenuEditModal>
+                                        </div>
+                                        
+                                    :
 
-                                                        <div className='op-menu-normal'>
-                                                            <span
-                                                            className='span-edit'
-                                                            onClick={abrirMenuEdit}
-                                                            >
-                                                                Edit ✏️
-                                                            </span>
-                                                            <span
-                                                            onClick={abrirMenuFiles}
-                                                            >
-                                                                File 📂
-                                                            </span>
-                                                        </div>
-                                                        }
-                                                    </MenuEditModal>
-                                    </div>
+                                    undefined
+                                    }
                                     
-                                :
 
-                                undefined
-                                }
+                                {botAcionarEdicao &&  <button 
+                                        className='bot-edit' 
+                                        onClick={toggleEdicao}
+                                    >
+                                        ✓
+                                    </button>}
                                 
-
-                            {botAcionarEdicao &&  <button 
-                                    className='bot-edit' 
-                                    onClick={toggleEdicao}
-                                >
-                                    ✓
-                                </button>}
-                            
-                            
+                            </div>
                         </div>
+                        {listaUl}
+                    
+                    
+                </div>
+                    <div className={`resultados ${!isTodasAulasMarcadas ? "down" : undefined}`}>
+                        <div className={"total"}>
+                            <span className='label'>Total:</span>
+                            <span className='total-value'>{formatarDinheiro(valorTotal)}</span>
+                        </div>
+                        <button className={`btn-fechar ${!isTodasAulasMarcadas ? "hidden" : undefined}`} id="btn-fechar" >
+                            <svg className="icon" viewBox="0 0 24 24">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                            <polyline points="22 4 12 14.01 9 11.01"/>
+                            </svg>
+                            Fechar mês
+                            <span className="tag">novo</span>
+                        </button>
                     </div>
-                    {listaUl}
-                </div>
-                <div className={totalToLeft ? 'total total-to-left' : 'total'}>
-                    <span>Total:</span>
-                    <span>{formatarDinheiro(valorTotal)}</span>
-                </div>
-                <div className= {showAnimationCaixaCheck ? 'pai-caixa-check pai-caixa-check-show' : 'pai-caixa-check'} >
-                    <div className={`caixa-check ${botCheckAnimation ? 'active' : 'inactive'}`}onClick={() => {
-                        if(!botAcionarEdicao){
-                          toggleModal() 
-                        }
-                    }}>
-                <span className="material-symbols-outlined info-icon">check</span>
-                </div>
-                </div>
-                
             </div>
                 <Modal isOpen={botOpenModal}>
                 {botAcionarEdicao && botOpenDeleteDiaModal ? 

@@ -10,30 +10,43 @@ const LATEST_VERSION = 'v2.6.1';
 
 const STYLES_HOME = {
     
+    mainApp: {
+        overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
+        backGound: "#ffffff",
+        minHeight: "100vh",
+        maxWidth: "430px",
+        margin: "auto"
+    },
     footerStyle: {
         position: "fixed",
         zIndex: "300",
-        top: "85%",
+        top: "88%",
         bottom: "0",
         width: "100%",
-        left: "0",
+        maxWidth: "430px",
+        maxHeight: "100px",
+        left: "50%",
+        transform: "translateX(-50%)",
         right: "0",
         display: "flex",
         backdropFilter: 'blur(5px)',
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "start",
+        paddingTop: "8px"
     },
     botNavegacao: {
         padding: ".75rem 1rem",
-        borderRadius: "14px",
+        borderRadius: "16px",
         fontWeight: "600",
-        fontSize: "1.4em",
+        fontSize: "1.2em",
         fontFamily: "Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
         borderStyle: "none",
-        width: "320px",
-        backgroundColor: "#22c55e",
-        color: "white",
+        width: "80%",
+        backgroundColor: "#22a96d",
+        color: "#fff",
         letterSpacing: ".2px"
     },
     textVersion: {
@@ -98,7 +111,9 @@ function App() {
 
     return (
         <>
-            {isAtual ? <MesAtual /> : <Meses />}
+            <main style={STYLES_HOME.mainApp}>
+                {isAtual ? <MesAtual /> : <Meses />}
+            </main>
             {atualizacao ? 
                 <Modal isOpen={true}>
                     <div className='janela-modal janela-modal-para-fechar-mes'>

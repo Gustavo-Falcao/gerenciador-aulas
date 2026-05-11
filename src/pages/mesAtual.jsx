@@ -30,6 +30,8 @@ function MesAtual() {
     const [botAcionarEdicao, setBotAcionarEdicao] = useState(false)
     const [isMenuAtivo, setIsMenuAtivo] = useState(false)
     const [isTodasAulasMarcadas, setIsTodasAulasMarcadas] = useState(false)
+    const [isAlterarDiaAtivo, setIsAlterarDiaAtivo] = useState(false)
+    const [isFecharMesAtivo, setIsFecharMesAtivo] = useState(false)
     const titulo = gerarTitulo(objetoMesAtual.mes, objetoMesAtual.ano);
     const [arrayDiasAlterar, setArrayDiasAlterar] = useState(() => {
         const arrayFullDias = localStorage.getItem('ARR_FULL_DIAS');
@@ -137,6 +139,14 @@ function MesAtual() {
         setBotOpenModal((prev) => !prev)
     }
 
+    function toggleModalFecharMes() {
+        if(!botAcionarEdicao && !isMenuAtivo) {
+            console.log("ESTA CAINDO NO EDICAO FALSE E MENU ATIVO FALSE")
+            setIsFecharMesAtivo((prev) => !prev)
+            toggleModal()
+        }
+    }
+    
     function toggleEdicao() {
         setBotAcionarEdicao((prev) => !prev);
     }
@@ -191,6 +201,7 @@ function MesAtual() {
         idDiaSerTrocado.current = dia.id;
 
         setArrayDiasAlterar(prev => prev.map((dias) => dias.id === dia.id ? {...dias, marcado: true, invalido: false} : dias)) 
+        setIsAlterarDiaAtivo(true)
         setBotOpenModal((prev) => !prev)
     }
 
@@ -207,7 +218,7 @@ function MesAtual() {
                     id={dia.id}
                     checked={dia.marcado}
                     onChange={() =>  {
-                        if(!botAcionarEdicao) {
+                        if(!botAcionarEdicao && !isMenuAtivo) {
                             toggle(dia.id)
                         }
                     }}
@@ -288,6 +299,7 @@ function MesAtual() {
         const elementoDiaEscolhido = objUltimoDiaEscolhido.current;
         objUltimoDiaEscolhido.current = null
         setArrayDiasAlterar(prev => prev.map((dias) => dias.id ===  elementoDiaEscolhido.id ? {...dias, marcado: false, invalido: elementoDiaEscolhido.invalido} : dias)) 
+        setIsAlterarDiaAtivo(false)
         setBotOpenModal((prev) => !prev)
     }
 
@@ -551,7 +563,11 @@ function MesAtual() {
                             <span className='label'>Total:</span>
                             <span className='total-value'>{formatarDinheiro(valorTotal)}</span>
                         </div>
-                        <button className={`btn-fechar ${!isTodasAulasMarcadas ? "hidden" : undefined}`} id="btn-fechar" >
+                        <button 
+                        className={`btn-fechar ${!isTodasAulasMarcadas ? "hidden" : undefined}`}
+                        id="btn-fechar" 
+                        onClick={toggleModalFecharMes}
+                        >
                             <svg className="icon" viewBox="0 0 24 24">
                             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
                             <polyline points="22 4 12 14.01 9 11.01"/>
@@ -562,26 +578,62 @@ function MesAtual() {
                     </div>
             </div>
                 <Modal isOpen={botOpenModal}>
-                {botAcionarEdicao && botOpenDeleteDiaModal ? 
-                    <DeleteModalConteudo idObjSerDeletado={objDiaSerDeletado.current.id}>
-                        <div className="text">
-                            <h2>Deseja deletar o dia "{objDiaSerDeletado.current.dataFormatada}" ?</h2>
-                            <p>Ao clicar em confirmar a ação não poderá ser desfeita.</p>
-                        </div>
-                        <div className="options">
-                            <button onClick={toggleModalDeletarDia} className="bot-modal">Cancel</button>
-                            <button onClick={deletarDia} className="bot-modal fechar">Confirmar</button>
-                        </div>
-                    </DeleteModalConteudo>
 
-                    : botAcionarEdicao ?
+                    {
+                        botAcionarEdicao && botOpenDeleteDiaModal &&
+                            <DeleteModalConteudo idObjSerDeletado={objDiaSerDeletado.current.id}>
+                                <div className="text">
+                                    <h2>Deseja deletar o dia "{objDiaSerDeletado.current.dataFormatada}" ?</h2>
+                                    <p>Ao clicar em confirmar a ação não poderá ser desfeita.</p>
+                                </div>
+                                <div className="options">
+                                    <button onClick={toggleModalDeletarDia} className="bot-modal">Cancel</button>
+                                    <button onClick={deletarDia} className="bot-modal fechar">Confirmar</button>
+                                </div>
+                            </DeleteModalConteudo>
+                    }
 
-                    <EditModal onHandlerEscolhaDiaAlterar={handlerEscolhaDiaAlterar} boxRef={boxRef} listaDiasParaAlterar={listaDiasParaAlterar} onFecharModalAndResetarUltimodIdDoDiaEscolhido={fecharModalAndResetarUltimodIdDoDiaEscolhido} onSalvarAlteracaoDiaAndResetarIdDoDiaParaAlterar={salvarAlteracaoDiaAndResetarIdDoDiaParaAlterar}/>
+                    {
+                        botAcionarEdicao && isAlterarDiaAtivo &&
+                            <EditModal 
+                                onHandlerEscolhaDiaAlterar={handlerEscolhaDiaAlterar} 
+                                boxRef={boxRef} 
+                                listaDiasParaAlterar={listaDiasParaAlterar} 
+                                onFecharModalAndResetarUltimodIdDoDiaEscolhido={fecharModalAndResetarUltimodIdDoDiaEscolhido} onSalvarAlteracaoDiaAndResetarIdDoDiaParaAlterar={salvarAlteracaoDiaAndResetarIdDoDiaParaAlterar}
+                            />
+                    }
 
-                    :
+                    {
+                        isFecharMesAtivo &&
+                            <FecharMesModal onToggleModal={toggleModalFecharMes} onFecharMes={fecharMes}/>
+                    }
+                {/* {
+                    botAcionarEdicao ?
+                        botOpenDeleteDiaModal ?
+                            <DeleteModalConteudo idObjSerDeletado={objDiaSerDeletado.current.id}>
+                                <div className="text">
+                                    <h2>Deseja deletar o dia "{objDiaSerDeletado.current.dataFormatada}" ?</h2>
+                                    <p>Ao clicar em confirmar a ação não poderá ser desfeita.</p>
+                                </div>
+                                <div className="options">
+                                    <button onClick={toggleModalDeletarDia} className="bot-modal">Cancel</button>
+                                    <button onClick={deletarDia} className="bot-modal fechar">Confirmar</button>
+                                </div>
+                            </DeleteModalConteudo>
+                        :
+                            <EditModal 
+                                onHandlerEscolhaDiaAlterar={handlerEscolhaDiaAlterar} 
+                                boxRef={boxRef} 
+                                listaDiasParaAlterar={listaDiasParaAlterar} 
+                                onFecharModalAndResetarUltimodIdDoDiaEscolhido={fecharModalAndResetarUltimodIdDoDiaEscolhido} onSalvarAlteracaoDiaAndResetarIdDoDiaParaAlterar={salvarAlteracaoDiaAndResetarIdDoDiaParaAlterar}
+                            />
+                        :
+                        
+                        <FecharMesModal onToggleModal={toggleModalFecharMes} onFecharMes={fecharMes}/>
 
-                    <FecharMesModal onToggleModal={toggleModal} onFecharMes={fecharMes}/>
-                }
+                } */}
+                
+        
                 </Modal>
         </>
     )

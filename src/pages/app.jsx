@@ -132,8 +132,13 @@ function App() {
                 null
             }
             <footer style={STYLES_HOME.footerStyle}>
-                <button style={STYLES_HOME.botNavegacao} onClick={() => setBotaoNavegacao(prev => (prev === "atual" ? "meses" : "atual"))}>{isAtual ? "Meses" : "Mes atual"} ⇆</button> 
-                <span style={STYLES_HOME.textVersion}>{userVersion}</span>
+                <button 
+                style={STYLES_HOME.botNavegacao} 
+                onClick={() => setBotaoNavegacao(prev => (prev === "atual" ? "meses" : "atual"))}
+                >
+                    {isAtual ? "Meses" : "Mes atual"} ⇆
+                </button> 
+                {/* <span style={STYLES_HOME.textVersion}>{userVersion}</span> */}
             </footer>
         </>
     )

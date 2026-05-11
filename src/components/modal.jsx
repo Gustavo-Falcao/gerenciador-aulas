@@ -2,14 +2,19 @@ import { useEffect } from "react";
 
 const STYLES_MODAL = {
     backgroundModal: {
-        backgroundColor: 'rgba(160, 160, 160, 0.48)',
-        backdropFilter: 'blur(1px)',
+        backgroundColor: 'rgba(0,0,0,0.35)',
+        backdropFilter: 'blur(4px)',
         position: 'fixed',
         top: '0',
         bottom: '0',
         left: '0',
         right: '0',
-        zIndex: '1000'
+        zIndex: '1000',
+        animation: 'fadeIn 0.2s ease',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+
     }
 }
 

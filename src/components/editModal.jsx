@@ -1,7 +1,7 @@
 function EditModal({onHandlerEscolhaDiaAlterar, boxRef, listaDiasParaAlterar, onFecharModalAndResetarUltimodIdDoDiaEscolhido, onSalvarAlteracaoDiaAndResetarIdDoDiaParaAlterar}) {
 
     return (
-         <div className='janela-modal janela-modal-para-alterar-dia'>
+         <div className='janela-modal'>
             <div className="header-alterar-dia">
                 <h2>Alterar dia</h2>
                 <div 

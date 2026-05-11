@@ -30,6 +30,7 @@ function Meses() {
 
     const keyTimeOutBusca = useRef(null)
     const tituloCalendario = useRef('')
+    const infosCurrentMes = useRef({aulas: null, valorAula: 0})
     const primeiroDiaSemana = useRef('')
     const objMesSerDeletado = useRef({id: null, nome: null})
 
@@ -40,6 +41,8 @@ function Meses() {
     },[meses])
 
     function abrirModal(mes) {
+        infosCurrentMes.current.aulas = mes.quantAula
+        infosCurrentMes.current.valorAula = mes.valorTotal
         tituloCalendario.current = gerarTitulo(mes.mes, mes.ano)
         primeiroDiaSemana.current = mes.arrayMes[0].nomeDiaSemana
         setArrayDiasCalendario(mes.arrayMes)
@@ -177,12 +180,13 @@ function Meses() {
                         mesesFiltrados.map((mes) => (
                             <article className='card' key={mes.id}>
                                 <div className='row'>
-                                    <div>
-                                        <strong>{gerarTitulo(mes.mes, mes.ano)}</strong>
-                                    </div>
+                                    <span className='card-title'>
+                                        {gerarTitulo(mes.mes, mes.ano)}
+                                    </span>
+                                    
                                     <span className='status'>Pago</span>
                                 </div>
-                                <div>
+                                <div className='card-info'>
                                     {mes.quantAula} aulas • {formatarDinheiro(mes.valorTotal)}
                                 </div>
                                 <hr className='divider'/>
@@ -230,14 +234,14 @@ function Meses() {
 
                     :
 
-                <div>
-                    <span className='bot-sair' onClick={() => setBotModal(false)}> 
+            
+                    <div className='janela-modal-calendario'>
+                        <div className="calendar-header">
+                            {tituloCalendario.current}
+                        </div>
+                        <span className='bot-sair' onClick={() => setBotModal(false)}> 
                         <img src={cruzIcon} className='icon' alt="Cruz icon" />
                         </span>
-                    <div className='janela-modal janela-modal-para-mostrar-meses'>
-                        <div className="calendar-header">
-                            <h2>{tituloCalendario.current}</h2>
-                        </div>
                             <div className="calendar-grid">
                                 <div className="weekday">D</div>
                                 <div className="weekday">S</div>
@@ -255,10 +259,13 @@ function Meses() {
                                 {arrayDiasCalendario.map((dia) => 
                                     gerarDiaCalendario(dia)   
                                 )}
-
                             </div>
+                        <div class="modal-summary">
+                            <span class="modal-summary-text" id="modal-info">{infosCurrentMes.current.aulas} aulas</span>
+                            <span class="modal-summary-value" id="modal-valor">{formatarDinheiro(infosCurrentMes.current.valorAula)}</span>
+                        </div>
                     </div>
-                </div>
+                
                 
                 }
             </Modal>

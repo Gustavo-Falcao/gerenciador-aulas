@@ -1,7 +1,7 @@
 function DeleteModalConteudo({idObjSerDeletado, children}) {
     return ( 
         <div 
-        className='janela-modal janela-modal-para-deletar-dia'
+        className='janela-modal'
         data-id={idObjSerDeletado}
         >
             {children}

@@ -607,33 +607,6 @@ function MesAtual() {
                         isFecharMesAtivo &&
                             <FecharMesModal onToggleModal={toggleModalFecharMes} onFecharMes={fecharMes}/>
                     }
-                {/* {
-                    botAcionarEdicao ?
-                        botOpenDeleteDiaModal ?
-                            <DeleteModalConteudo idObjSerDeletado={objDiaSerDeletado.current.id}>
-                                <div className="text">
-                                    <h2>Deseja deletar o dia "{objDiaSerDeletado.current.dataFormatada}" ?</h2>
-                                    <p>Ao clicar em confirmar a ação não poderá ser desfeita.</p>
-                                </div>
-                                <div className="options">
-                                    <button onClick={toggleModalDeletarDia} className="bot-modal">Cancel</button>
-                                    <button onClick={deletarDia} className="bot-modal fechar">Confirmar</button>
-                                </div>
-                            </DeleteModalConteudo>
-                        :
-                            <EditModal 
-                                onHandlerEscolhaDiaAlterar={handlerEscolhaDiaAlterar} 
-                                boxRef={boxRef} 
-                                listaDiasParaAlterar={listaDiasParaAlterar} 
-                                onFecharModalAndResetarUltimodIdDoDiaEscolhido={fecharModalAndResetarUltimodIdDoDiaEscolhido} onSalvarAlteracaoDiaAndResetarIdDoDiaParaAlterar={salvarAlteracaoDiaAndResetarIdDoDiaParaAlterar}
-                            />
-                        :
-                        
-                        <FecharMesModal onToggleModal={toggleModalFecharMes} onFecharMes={fecharMes}/>
-
-                } */}
-                
-        
                 </Modal>
         </>
     )

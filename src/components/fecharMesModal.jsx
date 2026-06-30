@@ -6,8 +6,8 @@ function FecharMesModal({onToggleModal, onFecharMes}) {
                 <p>Ao fechar o mês, será gerado uma nova lista com as aulas do mês seguinte.</p>
             </div>
             <div className="options">
-                <button onClick={onToggleModal} className="bot-modal">Cancel</button>
-                <button onClick={onFecharMes} className="bot-modal fechar">Fechar</button>
+                <button onClick={onFecharMes} className="bot-modal fechar">Fechar mês</button>
+                <button onClick={onToggleModal} className="bot-modal">Cancelar</button>
             </div>
         </div>
     )

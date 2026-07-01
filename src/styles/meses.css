@@ -386,7 +386,7 @@ summary::-webkit-details-marker{
   }
  
   .modal-title {
-    font-size: 15px;
+    font-size: 18px;
     font-weight: 600;
     color: #1a1a1a;
     letter-spacing: -0.01em;
@@ -421,7 +421,7 @@ summary::-webkit-details-marker{
     display: flex;
     align-items: center;
     gap: 5px;
-    font-size: 11px;
+    font-size: 13px;
     color: #888;
   }
  
@@ -445,7 +445,7 @@ summary::-webkit-details-marker{
  
   /* Cabeçalho dos dias da semana */
   .dow {
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 600;
     color: #aaa;
     padding: 2px 0 8px;
@@ -539,8 +539,8 @@ summary::-webkit-details-marker{
   }
  
   .stat-label {
-    font-size: 10px;
-    font-weight: 500;
+    font-size: 12px;
+    font-weight: 700;
     color: #aaa;
     margin-bottom: 3px;
     text-transform: uppercase;
@@ -558,7 +558,8 @@ summary::-webkit-details-marker{
   .stat-value.green { color: #1D9E75; }
  
   .stat-sub {
-    font-size: 10px;
-    color: #bbb;
+    font-size: 12px;
+    color: #aaa;
     margin-top: 2px;
+    font-weight: 500;
   }
